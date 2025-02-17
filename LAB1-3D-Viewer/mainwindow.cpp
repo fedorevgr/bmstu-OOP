@@ -5,6 +5,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
       , ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    ui->graphicsView->setScene(new QGraphicsScene(this));
+    ui->graphicsView->scene()->addEllipse(-100, -100, 100, 100);
+    ui->graphicsView->scene()->addEllipse(200, 200, 100, 100);
+    ui->graphicsView->scene()->addEllipse(0, 0, 6, 6);
 }
 
 MainWindow::~MainWindow() {

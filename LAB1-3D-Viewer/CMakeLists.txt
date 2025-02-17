@@ -17,6 +17,10 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        Geometry/Model.cpp
+        Geometry/Model.h
+        Geometry/Point.h
+        Geometry/Point.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
