@@ -22,8 +22,13 @@ typedef enum {
 PointEc pointFill(FILE *, Point *);
 
 PointEc pointsAverage(const Point *points, int n, Point *result);
+
 void pointMul(Point *, _3DSCALAR_);
-void pointsAdd(Point *, const Point *);
+
+void pointAdd(Point *pointDest, const Point *point);
+void pointSub(Point *, const Point *);
+
+void pointCopy(Point *, const Point *);
 
 
 #endif //POINT_H
