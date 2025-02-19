@@ -3,14 +3,9 @@
 
 #include <cstdio>
 
-typedef double _3DSCALAR_;
+#include "LinearSpace.h"
 
-typedef struct
-{
-    _3DSCALAR_ x, y, z;
-} _3DBASE_;
-
-typedef _3DBASE_ Point;
+typedef BASE3d Point;
 
 typedef enum {
     POINT_OK,
@@ -18,16 +13,16 @@ typedef enum {
     POINT_ARGUMENTS
 } PointEc;
 
-PointEc pointFill(FILE *, Point *);
+PointEc pointFill(FILE *, Point &);
 
-PointEc pointsAverage(const Point *points, int n, Point *result);
+PointEc pointsAverage(const Point *points, int n, Point &result);
 
-void pointMul(Point *, _3DSCALAR_);
+void pointMul(Point &, SCALAR);
 
-void pointAdd(Point *pointDest, const Point *point);
-void pointSub(Point *, const Point *);
+void pointAdd(Point &pointDest, const Point &point);
+void pointSub(Point &, const Point &);
 
-void pointCopy(Point *, const Point *);
+void pointCopy(Point &, const Point &);
 
 
 #endif //POINT_H

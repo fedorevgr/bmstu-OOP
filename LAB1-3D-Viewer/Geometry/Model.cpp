@@ -2,41 +2,47 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <qgraphicsscene.h>
 
+inline static
 void
-init3Scalars(
-		_3DBASE_ *base,
-		const _3DSCALAR_ x, const _3DSCALAR_ y, const _3DSCALAR_ z
-)
-{
-	base->x = x;
-	base->y = y;
-	base->z = z;
+initStructure(Structure &modelStruct) {
+	modelStruct.edgeCount = 0;
+	modelStruct.edges = nullptr;
+	modelStruct.pointCount = 0;
+	modelStruct.points = nullptr;
 }
+
+inline static
+bool
+structureIsEmpty(const Structure &model) {
+	return model.points == nullptr && model.edges == nullptr;
+}
+
 
 static
 ModelEC
-createStructureFields_(Structure *modelStruct)
+createStructureFields_(Structure &modelStruct)
 {
 	ModelEC ec = MODEL_OK;
-	if (modelStruct->edgeCount < 1 || modelStruct->pointCount < 1)
+	if (modelStruct.edgeCount < 1 || modelStruct.pointCount < 1)
 		ec = MODEL_FILE_ERROR;
 
 	if (ec == MODEL_OK)
 	{
-		modelStruct->points = (Point *)calloc(modelStruct->pointCount, sizeof(Point));
-		modelStruct->edges = (Edge *)calloc(modelStruct->edgeCount, sizeof(Edge));
+		modelStruct.points = (Point *)calloc(modelStruct.pointCount, sizeof(Point));
+		modelStruct.edges = (Edge *)calloc(modelStruct.edgeCount, sizeof(Edge));
 	}
 
-	if (ec == MODEL_OK && (!modelStruct->edges || !modelStruct->points))
+	if (ec == MODEL_OK && (!modelStruct.edges || !modelStruct.points))
 	{
 		ec = MODEL_MEMORY_ERROR;
 
-		free(modelStruct->points);
-		modelStruct->points = nullptr;
+		free(modelStruct.points);
+		modelStruct.points = nullptr;
 
-		free(modelStruct->edges);
-		modelStruct->edges = nullptr;
+		free(modelStruct.edges);
+		modelStruct.edges = nullptr;
 	}
 
 	return ec;
@@ -44,104 +50,109 @@ createStructureFields_(Structure *modelStruct)
 
 static
 ModelEC
-fillStructureFields_(const Structure *modelStruct, FILE *file)
+fillStructureFields_(const Structure &modelStruct, FILE *file)
 {
-	ModelEC ec = MODEL_OK;
-
-	for (PointIdx i = 0; i < modelStruct->pointCount && ec == MODEL_OK; i++)
-	{
-		if (pointFill(file, modelStruct->points + i) != POINT_OK)
-			ec = MODEL_FILE_ERROR;
-	}
-
-	for (int i = 0; i < modelStruct->edgeCount && ec == MODEL_OK; i++)
-	{
-		if (fscanf(file, "%d%d", &modelStruct->edges[i].from, &modelStruct->edges[i].to) != 2)
-			ec = MODEL_FILE_ERROR;
-	}
-
-	return ec;
-}
-
-
-static
-void
-relatePoints_(Point *points, const PointIdx pointCount, const Point *geometricCenter)
-{
-	for (PointIdx i = 0; i < pointCount; i++)
-		pointSub(points + i, geometricCenter);
-}
-
-static
-void
-initModel_(Model *model)
-{
-	Point geometricCenter;
-	pointsAverage(model->structure.points, model->structure.pointCount, &geometricCenter);
-	relatePoints_(model->structure.points, model->structure.pointCount, &geometricCenter);
-
-	model->position = geometricCenter;
-
-	model->rotation = { 0, 0, 0 };
-	model->scale = { 1, 1, 1 };
-}
-
-static
-ModelEC
-modelFromFilePtr_(FILE *f, Model **model)
-{
-	if (!f || !model)
+	if (!file)
+		return MODEL_FILE_ERROR;
+	if (modelStruct.points == nullptr ||  modelStruct.edges == nullptr)
 		return MODEL_ARG_ERROR;
 
 	ModelEC ec = MODEL_OK;
 
-	auto *tempModel = (Model *)malloc(sizeof(Model));
-	if (!tempModel)
-		ec = MODEL_MEMORY_ERROR;
+	for (PointIdx i = 0; i < modelStruct.pointCount && ec == MODEL_OK; i++)
+	{
+		if (pointFill(file, modelStruct.points[i]) != POINT_OK)
+			ec = MODEL_FILE_ERROR;
+	}
 
-	if (ec == MODEL_OK && fscanf(f, "%d%d", &tempModel->structure.pointCount, &tempModel->structure.edgeCount) != 2)
-		ec = MODEL_FILE_ERROR;
+	for (int i = 0; i < modelStruct.edgeCount && ec == MODEL_OK; i++)
+	{
+		if (fscanf(file, "%d%d", &modelStruct.edges[i].from, &modelStruct.edges[i].to) != 2)
+			ec = MODEL_FILE_ERROR;
+	}
 
-	if (ec == MODEL_OK)
-		ec = createStructureFields_(&tempModel->structure);
-
-	if (ec == MODEL_OK)
-		ec = fillStructureFields_(&tempModel->structure, f);
-
-	if (ec == MODEL_OK)
-		initModel_(tempModel);
-
-	if (ec != MODEL_OK)
-		modelFree(tempModel);
 	return ec;
 }
 
 
-ModelEC
-modelFromFile(const char *filename, Model **model)
+static
+void
+relatePoints_(Point *points, const PointIdx pointCount, const Point &geometricCenter)
 {
-	ModelEC ec = MODEL_OK;
-	FILE *f = fopen(filename, "r");
+	if (!points)
+		return;
 
-	if (!f)
+	for (PointIdx i = 0; i < pointCount; i++)
+		pointSub(points[i], geometricCenter);
+}
+
+static
+ModelEC
+initModelFilePtr_(FILE *file, Model &model)
+{
+	if (!file)
+		return MODEL_FILE_ERROR;
+
+	ModelEC ec = MODEL_OK;
+
+	if (fscanf(file, "%d%d", &model.structure.pointCount, &model.structure.edgeCount) != 2)
 		ec = MODEL_FILE_ERROR;
 
 	if (ec == MODEL_OK)
-		ec = modelFromFilePtr_(f, model);
+		ec = createStructureFields_(model.structure);
 
-	if (f)
-		fclose(f);
+	if (ec == MODEL_OK)
+		ec = fillStructureFields_(model.structure, file);
+
+	if (ec == MODEL_OK)
+	{
+		Point geometricCenter;
+		pointsAverage(model.structure.points, model.structure.pointCount, geometricCenter);
+		relatePoints_(model.structure.points, model.structure.pointCount, geometricCenter);
+
+		model.position = geometricCenter;
+
+		init3Scalars(model.rotation, 0, 0, 0);
+		init3Scalars(model.scale, 1, 1, 1);
+	}
+
+	return ec;
+}
+
+ModelEC
+initModel(const char *filename, Model &model)
+{
+	FILE *file = fopen(filename, "r");
+
+	ModelEC ec = initModelFilePtr_(file, model);
+
+	if (ec != MODEL_OK)
+		modelFree(model);
+
+	if (file)
+		fclose(file);
 
 	return ec;
 }
 
 void
-modelFree(Model *model)
+modelFree(Model &model)
 {
-	if (!model)
+	free(model.structure.points);
+	model.structure.points = nullptr;
+
+	free(model.structure.edges);
+	model.structure.edges = nullptr;
+}
+
+void
+modelDraw(const Model &model, QGraphicsScene &scene) {
+	if (model.structure.points == nullptr || model.structure.edges == nullptr)
 		return;
 
-	free(model->structure.points);
-	free(model->structure.edges);
-	free(model);
+	/* modelApplyTransformations
+	 *	copy to point buffer
+	 *	apply 3 transformations to each point
+	 *	iterate through edges, for drawing lines
+	*/
 }

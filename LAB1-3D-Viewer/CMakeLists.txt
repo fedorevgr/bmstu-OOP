@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
         Geometry/Model.h
         Geometry/Point.h
         Geometry/Point.cpp
+        Geometry/LinearSpace.cpp
+        Geometry/LinearSpace.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

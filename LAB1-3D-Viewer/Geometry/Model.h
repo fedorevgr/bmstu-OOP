@@ -17,14 +17,11 @@ typedef struct Structure_ {
     int edgeCount;
 } Structure;
 
-typedef _3DBASE_ Rotation;
-typedef _3DBASE_ Scale;
-
 typedef struct Model_ {
     Structure structure;
-    Point position;
-    Rotation rotation;
-    Scale scale;
+    BASE3d position;
+    BASE3d rotation;
+    BASE3d scale;
 } Model;
 
 typedef enum ModelEC_ {
@@ -35,10 +32,9 @@ typedef enum ModelEC_ {
     MODEL_UNKNOWN_ERROR
 } ModelEC;
 
-ModelEC modelFromFile(const char *filename, Model **model);
-void modelFree(Model *model);
+ModelEC
+initModel(const char* filename, Model &model);
 
-void init3Scalars(_3DBASE_ *, _3DSCALAR_, _3DSCALAR_, _3DSCALAR_);
-
+void modelFree(Model &model);
 
 #endif //MODEL_H
