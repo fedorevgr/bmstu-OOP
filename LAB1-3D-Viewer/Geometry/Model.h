@@ -38,4 +38,7 @@ typedef enum ModelEC_ {
 ModelEC modelFromFile(const char *filename, Model **model);
 void modelFree(Model *model);
 
+void init3Scalars(_3DBASE_ *, _3DSCALAR_, _3DSCALAR_, _3DSCALAR_);
+
+
 #endif //MODEL_H

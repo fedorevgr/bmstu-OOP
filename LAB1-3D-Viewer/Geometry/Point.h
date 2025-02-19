@@ -3,10 +3,9 @@
 
 #include <cstdio>
 
-#define _3DBASE_ base_3d__
-#define _3DSCALAR_ double
+typedef double _3DSCALAR_;
 
-typedef struct _3DBASE_
+typedef struct
 {
     _3DSCALAR_ x, y, z;
 } _3DBASE_;

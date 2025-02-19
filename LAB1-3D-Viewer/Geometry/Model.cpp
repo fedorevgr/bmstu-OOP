@@ -3,6 +3,17 @@
 #include <cstdlib>
 #include <cstdio>
 
+void
+init3Scalars(
+		_3DBASE_ *base,
+		const _3DSCALAR_ x, const _3DSCALAR_ y, const _3DSCALAR_ z
+)
+{
+	base->x = x;
+	base->y = y;
+	base->z = z;
+}
+
 static
 ModelEC
 createStructureFields_(Structure *modelStruct)
@@ -55,7 +66,7 @@ fillStructureFields_(const Structure *modelStruct, FILE *file)
 
 static
 void
-relatePoints(Point *points, const PointIdx pointCount, const Point *geometricCenter)
+relatePoints_(Point *points, const PointIdx pointCount, const Point *geometricCenter)
 {
 	for (PointIdx i = 0; i < pointCount; i++)
 		pointSub(points + i, geometricCenter);
@@ -63,16 +74,16 @@ relatePoints(Point *points, const PointIdx pointCount, const Point *geometricCen
 
 static
 void
-initModel(Model *model)
+initModel_(Model *model)
 {
 	Point geometricCenter;
 	pointsAverage(model->structure.points, model->structure.pointCount, &geometricCenter);
-	relatePoints(model->structure.points, model->structure.pointCount, &geometricCenter);
+	relatePoints_(model->structure.points, model->structure.pointCount, &geometricCenter);
 
 	model->position = geometricCenter;
 
 	model->rotation = { 0, 0, 0 };
-	model->scale = { 1, 1, 1};
+	model->scale = { 1, 1, 1 };
 }
 
 static
@@ -98,7 +109,7 @@ modelFromFilePtr_(FILE *f, Model **model)
 		ec = fillStructureFields_(&tempModel->structure, f);
 
 	if (ec == MODEL_OK)
-		initModel(tempModel);
+		initModel_(tempModel);
 
 	if (ec != MODEL_OK)
 		modelFree(tempModel);
