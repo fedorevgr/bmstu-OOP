@@ -43,4 +43,6 @@ void modelSetScale(Model &model, const BASE3d &newScale);
 
 ModelEC modelDraw(const Model& model, QGraphicsScene& scene);
 
+void modelPrint(const Model &model);
+
 #endif //MODEL_H

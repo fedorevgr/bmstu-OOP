@@ -216,3 +216,21 @@ modelDraw(const Model& model, QGraphicsScene& scene)
 	free(transformedPoints);
 	return ec;
 }
+
+void
+modelPrint(const Model &model)
+{
+	printf("Model\n");
+	printf("\tPos\n\t\t%lf, %lf, %lf\n", model.position.x, model.position.y, model.position.z);
+	printf("\tRot\n\t\t%lf, %lf, %lf\n", model.rotation.x, model.rotation.y, model.rotation.z);
+	printf("\tScale\n\t\t%lf, %lf, %lf\n", model.scale.x, model.scale.y, model.scale.z);
+	printf("\tStructure\n");
+
+	if (!model.structure.points || !model.structure.edges)
+		printf("\t\tUninitialized structure\n");
+	else
+	{
+		for (PointIdx i = 0; i < model.structure.pointCount; i++)
+			printf("\t\t%lf, %lf, %lf\n", model.structure.points[i].x, model.structure.points[i].y, model.structure.points[i].z);
+	}
+}

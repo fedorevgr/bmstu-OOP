@@ -16,7 +16,7 @@ const void *NO_ARG = nullptr;
 static
 void
 process(const Event event, const void *arg) {
-    static Model model = { nullptr };
+    static Model model;
     static QGraphicsScene *scene;
 
     BASE3d *newPos, *newRotation, *newScale;
@@ -48,10 +48,13 @@ process(const Event event, const void *arg) {
     }
 
     if (event != EXIT && modelEc == MODEL_OK)
+	{
+		scene->clear();
 		modelEc = modelDraw(model, *scene);
+	}
 
 	printf("%d\n", modelEc);
-    // handle ec
+	modelPrint(model);
 }
 
 
@@ -88,19 +91,31 @@ void MainWindow::on_posZ_valueChanged(double arg1) {
 
 void MainWindow::on_rotX_valueChanged(double arg1) {
     BASE3d newPos;
-	set3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
+	set3Scalars(newPos,
+			degreeToRadians(this->ui->rotX->value()),
+			degreeToRadians(this->ui->rotY->value()),
+			degreeToRadians(this->ui->rotZ->value())
+			);
     process(ROTATE, &newPos);
 }
 
 void MainWindow::on_rotY_valueChanged(double arg1) {
     BASE3d newPos;
-	set3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
+	set3Scalars(newPos,
+			degreeToRadians(this->ui->rotX->value()),
+			degreeToRadians(this->ui->rotY->value()),
+			degreeToRadians(this->ui->rotZ->value())
+	);
     process(ROTATE, &newPos);
 }
 
 void MainWindow::on_rotZ_valueChanged(double arg1) {
     BASE3d newPos;
-	set3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
+	set3Scalars(newPos,
+			degreeToRadians(this->ui->rotX->value()),
+			degreeToRadians(this->ui->rotY->value()),
+			degreeToRadians(this->ui->rotZ->value())
+	);
     process(ROTATE, &newPos);
 }
 
