@@ -180,11 +180,6 @@ modelDraw(const Model& model, QGraphicsScene& scene)
 	if (model.structure.points == nullptr || model.structure.edges == nullptr)
 		return MODEL_ARG_ERROR;
 
-	/* todo: check modelApplyTransformations
-	 *	copy to point buffer
-	 *	apply 3 transformations to each point
-	 *	iterate through edges, for drawing lines
-	*/
 	ModelEC ec = MODEL_OK;
 
 	auto *transformedPoints = (Point *)malloc(model.structure.pointCount * sizeof(Point));

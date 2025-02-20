@@ -66,8 +66,6 @@ process(const Event event, const void *arg) {
         case EXIT:
             modelFree(model);
             break;
-	default:
-		modelEc = MODEL_UNKNOWN_ERROR;
     }
 
     if (event != EXIT && modelEc == MODEL_OK)
