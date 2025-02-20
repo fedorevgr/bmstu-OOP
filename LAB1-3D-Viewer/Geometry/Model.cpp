@@ -199,9 +199,9 @@ modelDraw(const Model& model, QGraphicsScene& scene)
 	{
 		for (PointIdx i = 0; i < model.structure.pointCount; i++)
 		{
-			pointApplyScale(model.structure.points[i], model.scale);
-			pointApplyRotation(model.structure.points[i], model.rotation);
-			pointApplyReposition(model.structure.points[i], model.position);
+			pointApplyScale(transformedPoints[i], model.scale);
+			pointApplyRotation(transformedPoints[i], model.rotation);
+			pointApplyReposition(transformedPoints[i], model.position);
 		}
 
 		for (int i = 0; i < model.structure.edgeCount; i++)
