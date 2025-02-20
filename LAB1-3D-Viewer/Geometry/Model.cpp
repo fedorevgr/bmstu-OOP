@@ -122,8 +122,8 @@ initModelFilePtr_(FILE *file, Model& model)
 
 		model.position = geometricCenter;
 
-		init3Scalars(model.rotation, 0, 0, 0);
-		init3Scalars(model.scale, 1, 1, 1);
+		set3Scalars(model.rotation, 0, 0, 0);
+		set3Scalars(model.scale, 1, 1, 1);
 	}
 
 	return ec;
@@ -177,15 +177,44 @@ modelSetScale(Model &model, const BASE3d &newScale)
 	model.scale = newScale;
 }
 
-void
+ModelEC
 modelDraw(const Model& model, QGraphicsScene& scene)
 {
 	if (model.structure.points == nullptr || model.structure.edges == nullptr)
-		return;
+		return MODEL_ARG_ERROR;
 
-	/* modelApplyTransformations
+	/* todo: modelApplyTransformations
 	 *	copy to point buffer
 	 *	apply 3 transformations to each point
 	 *	iterate through edges, for drawing lines
 	*/
+	ModelEC ec = MODEL_OK;
+
+	auto *transformedPoints = (Point *) malloc(model.structure.pointCount * sizeof(Point));
+	if (!transformedPoints)
+		ec = MODEL_MEMORY_ERROR;
+	else
+		memmove(transformedPoints, model.structure.points, model.structure.pointCount * sizeof(Point));
+
+	if (ec == MODEL_OK)
+	{
+		Point buffer;
+		for (PointIdx i = 0; i < model.structure.pointCount; i++)
+		{
+			pointCopy(buffer, model.structure.points[i]);
+			// transform scale
+			pointApplyScale(buffer, model.scale);
+			// transform rotation
+			// apply reposition
+		}
+
+		for (int i = 0; i < model.structure.edgeCount; i++)
+		{
+			// point1 = points[edges[i].from], point2 = ...to
+			// scene.addLine(point1.x, point1.y ...)
+		}
+	}
+
+	free(transformedPoints);
+	return ec;
 }

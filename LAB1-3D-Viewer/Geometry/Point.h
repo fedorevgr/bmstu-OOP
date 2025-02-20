@@ -17,6 +17,7 @@ PointEc pointFill(FILE *, Point &);
 
 PointEc pointsAverage(const Point *points, int n, Point &result);
 
+void pointApplyScale(Point &point, const BASE3d &transform);
 void pointMul(Point &, SCALAR);
 
 void pointAdd(Point &pointDest, const Point &point);

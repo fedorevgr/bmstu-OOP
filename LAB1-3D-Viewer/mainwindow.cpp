@@ -73,54 +73,54 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_posX_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
+	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
     process(REPOS, &newPos);
 }
 
 void MainWindow::on_posY_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
+	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
     process(REPOS, &newPos);
 }
 
 void MainWindow::on_posZ_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
+	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
     process(REPOS, &newPos);
 }
 
 void MainWindow::on_rotX_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
+	set3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
     process(ROTATE, &newPos);
 }
 
 void MainWindow::on_rotY_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
+	set3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
     process(ROTATE, &newPos);
 }
 
 void MainWindow::on_rotZ_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
+	set3Scalars(newPos, this->ui->rotX->value(), this->ui->rotY->value(), this->ui->rotZ->value());
     process(ROTATE, &newPos);
 }
 
 void MainWindow::on_scaleX_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
+	set3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
     process(SCALE, &newPos);
 }
 
 void MainWindow::on_scaleY_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
+	set3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
     process(SCALE, &newPos);
 }
 
 void MainWindow::on_scaleZ_valueChanged(double arg1) {
     BASE3d newPos;
-    init3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
+	set3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
     process(SCALE, &newPos);
 }

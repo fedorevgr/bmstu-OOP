@@ -80,3 +80,27 @@ pointMul(
 	point.y *= k;
 	point.z *= k;
 }
+
+void
+pointApplyScale(Point &point, const BASE3d &transform)
+{
+	point.x *= transform.x;
+	point.y *= transform.y;
+	point.z *= transform.z;
+}
+
+void
+pointApplyRotation(Point &point, const BASE3d &transform)
+{
+	matrRotateOX(point, transform.x);
+	matrRotateOY(point, transform.y);
+	matrRotateOZ(point, transform.z);
+}
+
+void
+pointApplyReposition(Point &point, const BASE3d &transform)
+{
+	point.x += transform.x;
+	point.y += transform.y;
+	point.z += transform.z;
+}
