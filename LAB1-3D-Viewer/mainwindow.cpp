@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#define DEFAULT_FILE "..\\..\\abc.txt"
+#define DEFAULT_FILE "abc.txt"
 
 typedef enum Event_ {
     INIT,
@@ -47,11 +47,8 @@ process(const Event event, const void *arg) {
 		modelEc = MODEL_UNKNOWN_ERROR;
     }
 
-    if (event != EXIT) {
-        scene->addEllipse(-100, -100, 100, 100);
-		scene->addEllipse(200, 200, 100, 100);
-		scene->addEllipse(0, 0, 6, 6);
-    }
+    if (event != EXIT && modelEc == MODEL_OK)
+		modelEc = modelDraw(model, *scene);
 
 	printf("%d\n", modelEc);
     // handle ec
