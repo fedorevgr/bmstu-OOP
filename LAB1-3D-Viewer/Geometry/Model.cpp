@@ -6,7 +6,8 @@
 
 inline static
 void
-initStructure(Structure &modelStruct) {
+initStructure(Structure& modelStruct)
+{
 	modelStruct.edgeCount = 0;
 	modelStruct.edges = nullptr;
 	modelStruct.pointCount = 0;
@@ -15,14 +16,27 @@ initStructure(Structure &modelStruct) {
 
 inline static
 bool
-structureIsEmpty(const Structure &model) {
+structureIsEmpty(const Structure& model)
+{
 	return model.points == nullptr && model.edges == nullptr;
 }
 
+inline static
+ModelEC
+edgeFill_(FILE *file, Edge &edge)
+{
+	if (!file)
+		return MODEL_ARG_ERROR;
+
+	ModelEC ec = MODEL_OK;
+	if (fscanf(file, "%d%d", &edge.from, &edge.to) != 2)
+		ec = MODEL_FILE_ERROR;
+	return ec;
+}
 
 static
 ModelEC
-createStructureFields_(Structure &modelStruct)
+createStructureFields_(Structure& modelStruct)
 {
 	ModelEC ec = MODEL_OK;
 	if (modelStruct.edgeCount < 1 || modelStruct.pointCount < 1)
@@ -50,11 +64,11 @@ createStructureFields_(Structure &modelStruct)
 
 static
 ModelEC
-fillStructureFields_(const Structure &modelStruct, FILE *file)
+fillStructureFields_(const Structure& modelStruct, FILE *file)
 {
 	if (!file)
 		return MODEL_FILE_ERROR;
-	if (modelStruct.points == nullptr ||  modelStruct.edges == nullptr)
+	if (modelStruct.points == nullptr || modelStruct.edges == nullptr)
 		return MODEL_ARG_ERROR;
 
 	ModelEC ec = MODEL_OK;
@@ -66,18 +80,14 @@ fillStructureFields_(const Structure &modelStruct, FILE *file)
 	}
 
 	for (int i = 0; i < modelStruct.edgeCount && ec == MODEL_OK; i++)
-	{
-		if (fscanf(file, "%d%d", &modelStruct.edges[i].from, &modelStruct.edges[i].to) != 2)
-			ec = MODEL_FILE_ERROR;
-	}
+		ec = edgeFill_(file, modelStruct.edges[i]);
 
 	return ec;
 }
 
-
 static
 void
-relatePoints_(Point *points, const PointIdx pointCount, const Point &geometricCenter)
+relatePoints_(Point *points, const PointIdx pointCount, const Point& geometricCenter)
 {
 	if (!points)
 		return;
@@ -88,7 +98,7 @@ relatePoints_(Point *points, const PointIdx pointCount, const Point &geometricCe
 
 static
 ModelEC
-initModelFilePtr_(FILE *file, Model &model)
+initModelFilePtr_(FILE *file, Model& model)
 {
 	if (!file)
 		return MODEL_FILE_ERROR;
@@ -120,7 +130,7 @@ initModelFilePtr_(FILE *file, Model &model)
 }
 
 ModelEC
-initModel(const char *filename, Model &model)
+initModel(const char *filename, Model& model)
 {
 	FILE *file = fopen(filename, "r");
 
@@ -135,18 +145,41 @@ initModel(const char *filename, Model &model)
 	return ec;
 }
 
-void
-modelFree(Model &model)
+ModelEC
+modelFree(Model& model)
 {
+	if (!model.structure.points || !model.structure.edges)
+		return MODEL_ARG_ERROR;
+
 	free(model.structure.points);
 	model.structure.points = nullptr;
 
 	free(model.structure.edges);
 	model.structure.edges = nullptr;
+	return MODEL_OK;
 }
 
 void
-modelDraw(const Model &model, QGraphicsScene &scene) {
+modelSetPos(Model &model, const BASE3d &newPos)
+{
+	model.position = newPos;
+}
+
+void
+modelSetRot(Model &model, const BASE3d &newRot)
+{
+	model.rotation = newRot;
+}
+
+void
+modelSetScale(Model &model, const BASE3d &newScale)
+{
+	model.scale = newScale;
+}
+
+void
+modelDraw(const Model& model, QGraphicsScene& scene)
+{
 	if (model.structure.points == nullptr || model.structure.edges == nullptr)
 		return;
 

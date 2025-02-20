@@ -25,35 +25,35 @@ process(const Event event, const void *arg) {
 
     switch (event) {
         case INIT:
-            // init model
-            initModel(DEFAULT_FILE, model);
+            modelEc = initModel(DEFAULT_FILE, model);
             scene = (QGraphicsScene *) arg;
             break;
         case REPOS:
-            // set new coordinates
             newPos = (BASE3d *) arg;
-            printf("New pos: %lf, %lf, %lf\n", newPos->x, newPos->y, newPos->z);
+			modelSetPos(model, *newPos);
             break;
         case ROTATE:
-            // set new rotation
             newRotation = (BASE3d *) arg;
-
+			modelSetRot(model, *newRotation);
             break;
         case SCALE:
-            // set new scale
             newScale = (BASE3d *) arg;
-
+			modelSetScale(model, *newScale);
             break;
         case EXIT:
-            // model free
-            modelFree(model);
+            modelEc = modelFree(model);
             break;
+	default:
+		modelEc = MODEL_UNKNOWN_ERROR;
     }
 
     if (event != EXIT) {
         scene->addEllipse(-100, -100, 100, 100);
+		scene->addEllipse(200, 200, 100, 100);
+		scene->addEllipse(0, 0, 6, 6);
     }
 
+	printf("%d\n", modelEc);
     // handle ec
 }
 
@@ -64,8 +64,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(new QGraphicsScene(this));
 
     process(INIT, (void *) ui->graphicsView->scene());
-    ui->graphicsView->scene()->addEllipse(200, 200, 100, 100);
-    ui->graphicsView->scene()->addEllipse(0, 0, 6, 6);
 }
 
 MainWindow::~MainWindow() {
