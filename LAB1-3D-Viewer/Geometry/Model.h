@@ -1,6 +1,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <qgraphicsscene.h>
+
 #include "Point.h"
 
 typedef int PointIdx;
@@ -38,5 +40,7 @@ ModelEC modelFree(Model &model);
 void modelSetPos(Model &model, const BASE3d &newPos);
 void modelSetRot(Model &model, const BASE3d &newRot);
 void modelSetScale(Model &model, const BASE3d &newScale);
+
+ModelEC modelDraw(const Model& model, QGraphicsScene& scene);
 
 #endif //MODEL_H

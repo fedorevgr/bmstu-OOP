@@ -2,7 +2,6 @@
 
 #include <cstdlib>
 #include <cstdio>
-#include <qgraphicsscene.h>
 
 inline static
 void
@@ -23,7 +22,7 @@ structureIsEmpty(const Structure& model)
 
 inline static
 ModelEC
-edgeFill_(FILE *file, Edge &edge)
+edgeFill_(FILE *file, Edge& edge)
 {
 	if (!file)
 		return MODEL_ARG_ERROR;
@@ -160,19 +159,19 @@ modelFree(Model& model)
 }
 
 void
-modelSetPos(Model &model, const BASE3d &newPos)
+modelSetPos(Model& model, const BASE3d& newPos)
 {
 	model.position = newPos;
 }
 
 void
-modelSetRot(Model &model, const BASE3d &newRot)
+modelSetRot(Model& model, const BASE3d& newRot)
 {
 	model.rotation = newRot;
 }
 
 void
-modelSetScale(Model &model, const BASE3d &newScale)
+modelSetScale(Model& model, const BASE3d& newScale)
 {
 	model.scale = newScale;
 }
@@ -183,14 +182,14 @@ modelDraw(const Model& model, QGraphicsScene& scene)
 	if (model.structure.points == nullptr || model.structure.edges == nullptr)
 		return MODEL_ARG_ERROR;
 
-	/* todo: modelApplyTransformations
+	/* todo: check modelApplyTransformations
 	 *	copy to point buffer
 	 *	apply 3 transformations to each point
 	 *	iterate through edges, for drawing lines
 	*/
 	ModelEC ec = MODEL_OK;
 
-	auto *transformedPoints = (Point *) malloc(model.structure.pointCount * sizeof(Point));
+	auto *transformedPoints = (Point *)malloc(model.structure.pointCount * sizeof(Point));
 	if (!transformedPoints)
 		ec = MODEL_MEMORY_ERROR;
 	else
@@ -198,21 +197,20 @@ modelDraw(const Model& model, QGraphicsScene& scene)
 
 	if (ec == MODEL_OK)
 	{
-		Point buffer;
 		for (PointIdx i = 0; i < model.structure.pointCount; i++)
 		{
-			pointCopy(buffer, model.structure.points[i]);
-			// transform scale
-			pointApplyScale(buffer, model.scale);
-			// transform rotation
-			// apply reposition
+			pointApplyScale(model.structure.points[i], model.scale);
+			pointApplyRotation(model.structure.points[i], model.rotation);
+			pointApplyReposition(model.structure.points[i], model.position);
 		}
 
 		for (int i = 0; i < model.structure.edgeCount; i++)
-		{
-			// point1 = points[edges[i].from], point2 = ...to
-			// scene.addLine(point1.x, point1.y ...)
-		}
+			scene.addLine(
+					transformedPoints[model.structure.edges[i].from].x,
+					transformedPoints[model.structure.edges[i].from].y,
+					transformedPoints[model.structure.edges[i].to].x,
+					transformedPoints[model.structure.edges[i].to].y
+			);
 	}
 
 	free(transformedPoints);
