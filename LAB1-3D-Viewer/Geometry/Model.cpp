@@ -119,8 +119,7 @@ initModelFilePtr_(FILE *file, Model& model)
 		pointsAverage(model.structure.points, model.structure.pointCount, geometricCenter);
 		relatePoints_(model.structure.points, model.structure.pointCount, geometricCenter);
 
-		model.position = geometricCenter;
-
+		set3Scalars(model.position, 0, 0, 0);
 		set3Scalars(model.rotation, 0, 0, 0);
 		set3Scalars(model.scale, 1, 1, 1);
 	}
@@ -144,18 +143,17 @@ initModel(const char *filename, Model& model)
 	return ec;
 }
 
-ModelEC
+void
 modelFree(Model& model)
 {
-	if (!model.structure.points || !model.structure.edges)
-		return MODEL_ARG_ERROR;
-
-	free(model.structure.points);
-	model.structure.points = nullptr;
-
-	free(model.structure.edges);
-	model.structure.edges = nullptr;
-	return MODEL_OK;
+	if (model.structure.points) {
+		free(model.structure.points);
+		model.structure.points = nullptr;
+	}
+	if (model.structure.edges) {
+		free(model.structure.edges);
+		model.structure.edges = nullptr;
+	}
 }
 
 void

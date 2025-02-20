@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "QMessageBox"
+#include "QFileDialog"
 
 #define DEFAULT_FILE "abc.txt"
 
@@ -15,6 +17,27 @@ const void *NO_ARG = nullptr;
 
 static
 void
+showError(const ModelEC modelEc) {
+    switch (modelEc) {
+        case MODEL_FILE_ERROR:
+            QMessageBox::critical(nullptr, "Error", "File error, figure can't be shown");
+        break;
+        case MODEL_UNKNOWN_ERROR:
+            QMessageBox::critical(nullptr, "Error", "Unknown error");
+        break;
+        case  MODEL_MEMORY_ERROR:
+            QMessageBox::critical(nullptr, "Error", "Memory error, figure can't be shown");
+        break;
+        case MODEL_ARG_ERROR:
+            QMessageBox::critical(nullptr, "Error", "Arg error");
+        break;
+        default:
+            break;
+    }
+}
+
+static
+void
 process(const Event event, const void *arg) {
     static Model model;
     static QGraphicsScene *scene;
@@ -25,8 +48,8 @@ process(const Event event, const void *arg) {
 
     switch (event) {
         case INIT:
-            modelEc = initModel(DEFAULT_FILE, model);
-            scene = (QGraphicsScene *) arg;
+            modelEc = initModel((const char *) ((void **) arg)[1], model);
+            scene = (QGraphicsScene *) ((void **) arg)[0];
             break;
         case REPOS:
             newPos = (BASE3d *) arg;
@@ -41,7 +64,7 @@ process(const Event event, const void *arg) {
 			modelSetScale(model, *newScale);
             break;
         case EXIT:
-            modelEc = modelFree(model);
+            modelFree(model);
             break;
 	default:
 		modelEc = MODEL_UNKNOWN_ERROR;
@@ -50,11 +73,23 @@ process(const Event event, const void *arg) {
     if (event != EXIT && modelEc == MODEL_OK)
 	{
 		scene->clear();
-		modelEc = modelDraw(model, *scene);
+		modelDraw(model, *scene);
 	}
 
-	printf("%d\n", modelEc);
-	modelPrint(model);
+    showError(modelEc);
+}
+
+static
+const char *
+getFilename(const QString &qString) {
+    const char *fileName = nullptr;
+
+    if (!qString.isEmpty()) {
+        const QByteArray byteArray = qString.toUtf8();
+        fileName = byteArray.constData();
+    }
+
+    return fileName;
 }
 
 
@@ -63,7 +98,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->graphicsView->setScene(new QGraphicsScene(this));
 
-    process(INIT, (void *) ui->graphicsView->scene());
+    const QString qFilename = QFileDialog::getOpenFileName(this, "Open File", "");
+    void *initArgs[2] = { ui->graphicsView->scene(), (void *) getFilename(qFilename) };
+
+    process(INIT, initArgs);
 }
 
 MainWindow::~MainWindow() {

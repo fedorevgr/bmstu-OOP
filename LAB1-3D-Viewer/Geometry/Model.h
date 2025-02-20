@@ -35,7 +35,7 @@ typedef enum ModelEC_ {
 } ModelEC;
 
 ModelEC initModel(const char* filename, Model &model);
-ModelEC modelFree(Model &model);
+void modelFree(Model &model);
 
 void modelSetPos(Model &model, const BASE3d &newPos);
 void modelSetRot(Model &model, const BASE3d &newRot);
