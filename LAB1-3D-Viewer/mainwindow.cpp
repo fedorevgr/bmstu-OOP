@@ -3,8 +3,6 @@
 #include "QMessageBox"
 #include "QFileDialog"
 
-#define DEFAULT_FILE "abc.txt"
-
 typedef enum Event_ {
     INIT,
     REPOS,
@@ -14,6 +12,8 @@ typedef enum Event_ {
 } Event;
 
 const void *NO_ARG = nullptr;
+const int SCENE_ARG_POS = 0;
+const int FILE_ARG_POS = 1;
 
 static
 void
@@ -48,8 +48,8 @@ process(const Event event, const void *arg) {
 
     switch (event) {
         case INIT:
-            modelEc = initModel((const char *) ((void **) arg)[1], model);
-            scene = (QGraphicsScene *) ((void **) arg)[0];
+            modelEc = initModel((const char *) ((void **) arg)[FILE_ARG_POS], model);
+            scene = (QGraphicsScene *) ((void **) arg)[SCENE_ARG_POS];
             break;
         case REPOS:
             newPos = (BASE3d *) arg;
@@ -96,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->graphicsView->setScene(new QGraphicsScene(this));
 
-    const QString qFilename = QFileDialog::getOpenFileName(this, "Open File", "");
+    const QString qFilename = QFileDialog::getOpenFileName(this, "Open File", ".", "Obj files (*.txt)");
     void *initArgs[2] = { ui->graphicsView->scene(), (void *) getFilename(qFilename) };
 
     process(INIT, initArgs);
