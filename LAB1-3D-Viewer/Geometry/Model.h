@@ -1,6 +1,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+
+// todo: this should be removed
 #include <qgraphicsscene.h>
 
 #include "Point.h"

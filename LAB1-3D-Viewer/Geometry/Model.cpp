@@ -174,8 +174,10 @@ modelSetScale(Model& model, const BASE3d& newScale)
 	model.scale = newScale;
 }
 
+// todo: if buffer == null return required amount of object - N
+// todo: else fill buffer with N objects
 ModelEC
-modelDraw(const Model& model, QGraphicsScene& scene)
+modelDraw(const Model& model, QGraphicsScene& scene) // todo remove Qt dependency
 {
 	if (model.structure.points == nullptr || model.structure.edges == nullptr)
 		return MODEL_ARG_ERROR;
@@ -197,7 +199,7 @@ modelDraw(const Model& model, QGraphicsScene& scene)
 			pointApplyReposition(transformedPoints[i], model.position);
 		}
 
-		for (int i = 0; i < model.structure.edgeCount; i++)
+		for (int i = 0; i < model.structure.edgeCount; i++) // todo: move to buffer
 			scene.addLine(
 					transformedPoints[model.structure.edges[i].from].x,
 					transformedPoints[model.structure.edges[i].from].y,

@@ -3,6 +3,12 @@
 #include "QMessageBox"
 #include "QFileDialog"
 
+
+// todo: move event handler to Geometry/main
+// todo: retrieve error message
+// todo: add drawing method implementation
+
+
 typedef enum Event_ {
     INIT,
     REPOS,
@@ -61,7 +67,7 @@ process(const Event event, const void *arg) {
             break;
         case SCALE:
             newScale = (BASE3d *) arg;
-			modelSetScale(model, *newScale);
+			modelSetScale(model, *newScale); f
             break;
         case EXIT:
             modelFree(model);
@@ -77,27 +83,18 @@ process(const Event event, const void *arg) {
     showError(modelEc);
 }
 
-static
-const char *
-getFilename(const QString &qString) {
-    const char *fileName = nullptr;
-
-    if (!qString.isEmpty()) {
-        const QByteArray byteArray = qString.toUtf8();
-        fileName = byteArray.constData();
-    }
-
-    return fileName;
-}
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     ui->graphicsView->setScene(new QGraphicsScene(this));
 
-    const QString qFilename = QFileDialog::getOpenFileName(this, "Open File", ".", "Obj files (*.txt)");
-    void *initArgs[2] = { ui->graphicsView->scene(), (void *) getFilename(qFilename) };
+	const char *filename = nullptr;
+
+    const QString qFilename = QFileDialog::getOpenFileName(this, "Open Object File", ".", "Text files (*.txt)");
+	const QByteArray byteArray = qFilename.toUtf8();
+	filename = byteArray.constData();
+
+    void *initArgs[2] = { ui->graphicsView->scene(), (char *)filename };
 
     process(INIT, initArgs);
 }
@@ -109,19 +106,19 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_posX_valueChanged(double arg1) {
     BASE3d newPos;
-	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
+	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value() * -1, this->ui->posZ->value());
     process(REPOS, &newPos);
 }
 
 void MainWindow::on_posY_valueChanged(double arg1) {
     BASE3d newPos;
-	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
+	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value()  * -1, this->ui->posZ->value());
     process(REPOS, &newPos);
 }
 
 void MainWindow::on_posZ_valueChanged(double arg1) {
     BASE3d newPos;
-	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value(), this->ui->posZ->value());
+	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value()  * -1, this->ui->posZ->value());
     process(REPOS, &newPos);
 }
 

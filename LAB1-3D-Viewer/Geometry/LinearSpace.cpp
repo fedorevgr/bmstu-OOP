@@ -1,25 +1,4 @@
-//
-// Created by lpacw on 2/19/2025.
-//
-
 #include "LinearSpace.h"
-
-/*
-	 *  OZ
-	 *  	cos  sin 0
-	 *  	-sin cos 0
-	 *  	0 	 0   1
-	 *	OY
-	 *		cos  0   sin
-	 *		0 	 1	0
-	 *		-sin 0 	cos
-	 *
-	 *	OX
-	 *		1	 0   0
-	 *		0 	 cos sin
-	 *		0	-sin cos
-	 */
-
 
 void
 set3Scalars
