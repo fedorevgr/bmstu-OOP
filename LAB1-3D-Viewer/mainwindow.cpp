@@ -3,27 +3,11 @@
 #include "QMessageBox"
 #include "QFileDialog"
 
-
-// todo: move event handler to Geometry/main
-// todo: retrieve error message
-// todo: add drawing method implementation
-
-
-typedef enum Event_ {
-    INIT,
-    REPOS,
-    ROTATE,
-    SCALE,
-    EXIT
-} Event;
-
-const void *NO_ARG = nullptr;
-const int SCENE_ARG_POS = 0;
-const int FILE_ARG_POS = 1;
+#include "Geometry/ModelEntry.h"
 
 static
 void
-showError(const ModelEC modelEc) {
+showError(const ModelEC modelEc, void *args) {
     switch (modelEc) {
         case MODEL_FILE_ERROR:
             QMessageBox::critical(nullptr, "Error", "File error, figure can't be shown");
@@ -43,45 +27,25 @@ showError(const ModelEC modelEc) {
 }
 
 static
-void
-process(const Event event, const void *arg) {
-    static Model model;
-    static QGraphicsScene *scene;
-
-    BASE3d *newPos, *newRotation, *newScale;
-
-    ModelEC modelEc = MODEL_OK;
-
-    switch (event) {
-        case INIT:
-            modelEc = initModel((const char *) ((void **) arg)[FILE_ARG_POS], model);
-            scene = (QGraphicsScene *) ((void **) arg)[SCENE_ARG_POS];
-            break;
-        case REPOS:
-            newPos = (BASE3d *) arg;
-			modelSetPos(model, *newPos);
-            break;
-        case ROTATE:
-            newRotation = (BASE3d *) arg;
-			modelSetRot(model, *newRotation);
-            break;
-        case SCALE:
-            newScale = (BASE3d *) arg;
-			modelSetScale(model, *newScale); f
-            break;
-        case EXIT:
-            modelFree(model);
-            break;
-    }
-
-    if (event != EXIT && modelEc == MODEL_OK)
-	{
-		scene->clear();
-		modelDraw(model, *scene);
-	}
-
-    showError(modelEc);
+void lineDrawer(SCALAR x1, SCALAR y1, SCALAR x2, SCALAR y2, void *args)
+{
+	static QGraphicsScene *scene;
+	if (args)
+		scene = (QGraphicsScene *) args;
+	else if (scene)
+		scene->addLine(x1, y1, x2, y2);;
 }
+
+static
+void cleaningFunction(void *args)
+{
+	static QGraphicsScene *scene;
+	if (args)
+		scene = (QGraphicsScene *) args;
+	else if (scene)
+		scene->clear();
+}
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -94,9 +58,13 @@ MainWindow::MainWindow(QWidget *parent)
 	const QByteArray byteArray = qFilename.toUtf8();
 	filename = byteArray.constData();
 
-    void *initArgs[2] = { ui->graphicsView->scene(), (char *)filename };
+   	InitArgs initArgs;
+	fillInitArgs(initArgs, filename, lineDrawer, cleaningFunction, showError);
 
-    process(INIT, initArgs);
+	lineDrawer(0, 0, 0, 0, this->ui->graphicsView->scene());
+	cleaningFunction(this->ui->graphicsView->scene());
+
+    process(INIT, &initArgs);
 }
 
 MainWindow::~MainWindow() {

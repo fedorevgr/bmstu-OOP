@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <cstring>
 
 inline static
 void
@@ -174,10 +175,9 @@ modelSetScale(Model& model, const BASE3d& newScale)
 	model.scale = newScale;
 }
 
-// todo: if buffer == null return required amount of object - N
-// todo: else fill buffer with N objects
+
 ModelEC
-modelDraw(const Model& model, QGraphicsScene& scene) // todo remove Qt dependency
+modelDraw(const Model& model, LineDrawingFunc lineFunc)
 {
 	if (model.structure.points == nullptr || model.structure.edges == nullptr)
 		return MODEL_ARG_ERROR;
@@ -200,11 +200,12 @@ modelDraw(const Model& model, QGraphicsScene& scene) // todo remove Qt dependenc
 		}
 
 		for (int i = 0; i < model.structure.edgeCount; i++) // todo: move to buffer
-			scene.addLine(
+			lineFunc(
 					transformedPoints[model.structure.edges[i].from].x,
 					transformedPoints[model.structure.edges[i].from].y,
 					transformedPoints[model.structure.edges[i].to].x,
-					transformedPoints[model.structure.edges[i].to].y
+					transformedPoints[model.structure.edges[i].to].y,
+					nullptr
 			);
 	}
 

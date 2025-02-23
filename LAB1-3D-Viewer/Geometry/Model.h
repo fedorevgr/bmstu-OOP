@@ -1,11 +1,9 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-
-// todo: this should be removed
-#include <qgraphicsscene.h>
-
 #include "Point.h"
+
+typedef void (*LineDrawingFunc)(SCALAR, SCALAR, SCALAR, SCALAR, void *);
 
 typedef int PointIdx;
 
@@ -43,7 +41,7 @@ void modelSetPos(Model &model, const BASE3d &newPos);
 void modelSetRot(Model &model, const BASE3d &newRot);
 void modelSetScale(Model &model, const BASE3d &newScale);
 
-ModelEC modelDraw(const Model& model, QGraphicsScene& scene);
+ModelEC modelDraw(const Model& model, LineDrawingFunc lineDrawer);
 
 void modelPrint(const Model &model);
 
