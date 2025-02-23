@@ -179,7 +179,7 @@ modelSetScale(Model& model, const BASE3d& newScale)
 ModelEC
 modelDraw(const Model& model, LineDrawingFunc lineFunc)
 {
-	if (model.structure.points == nullptr || model.structure.edges == nullptr)
+	if (!model.structure.points || !model.structure.edges || !lineFunc)
 		return MODEL_ARG_ERROR;
 
 	ModelEC ec = MODEL_OK;
@@ -199,7 +199,7 @@ modelDraw(const Model& model, LineDrawingFunc lineFunc)
 			pointApplyReposition(transformedPoints[i], model.position);
 		}
 
-		for (int i = 0; i < model.structure.edgeCount; i++) // todo: move to buffer
+		for (int i = 0; i < model.structure.edgeCount; i++)
 			lineFunc(
 					transformedPoints[model.structure.edges[i].from].x,
 					transformedPoints[model.structure.edges[i].from].y,
