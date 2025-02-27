@@ -103,9 +103,10 @@ initModelFilePtr_(Model& model, FILE *file)
 	if (!file)
 		return MODEL_FILE_ERROR;
 
+	Structure &structure = model.structure;
 	ModelEC ec = MODEL_OK;
 
-	if (fscanf(file, "%d%d", &model.structure.pointCount, &model.structure.edgeCount) != 2)
+	if (fscanf(file, "%d%d", &structure.pointCount, &structure.edgeCount) != 2)
 		ec = MODEL_FILE_ERROR;
 
 	if (ec == MODEL_OK)
@@ -117,8 +118,8 @@ initModelFilePtr_(Model& model, FILE *file)
 	if (ec == MODEL_OK)
 	{
 		Point geometricCenter;
-		pointsAverage(geometricCenter, model.structure.points, model.structure.pointCount);
-		relatePoints_(model.structure.points, model.structure.pointCount, geometricCenter);
+		pointsAverage(geometricCenter, structure.points, structure.pointCount);
+		relatePoints_(structure.points, structure.pointCount, geometricCenter);
 
 		set3Scalars(model.position, 0, 0, 0);
 		set3Scalars(model.rotation, 0, 0, 0);
@@ -183,26 +184,29 @@ modelDraw(const Model& model, const LineDrawingFunc lineDrawer)
 		return MODEL_ARG_ERROR;
 
 	ModelEC ec = MODEL_OK;
+	const Structure structure = model.structure;
 
-	auto *transformedPoints = (Point *)malloc(model.structure.pointCount * sizeof(Point));
+	auto *transformedPoints = (Point *)malloc(structure.pointCount * sizeof(Point));
 	if (!transformedPoints)
 		ec = MODEL_MEMORY_ERROR;
 	else
-		memmove(transformedPoints, model.structure.points, model.structure.pointCount * sizeof(Point));
+		memmove(transformedPoints, structure.points, structure.pointCount * sizeof(Point));
 
 	if (ec == MODEL_OK)
 	{
-		for (PointIdx i = 0; i < model.structure.pointCount; i++)
+		for (PointIdx i = 0; i < structure.pointCount; i++)
 		{
 			pointApplyScale(transformedPoints[i], model.scale);
 			pointApplyRotation(transformedPoints[i], model.rotation);
 			pointApplyReposition(transformedPoints[i], model.position);
 		}
 
-		for (int i = 0; i < model.structure.edgeCount; i++)
+		for (int i = 0; i < structure.edgeCount; i++)
 		{
-			const Point pointFrom = transformedPoints[model.structure.edges[i].from];
-			const Point pointTo = transformedPoints[model.structure.edges[i].to];
+			const auto [from, to] = structure.edges[i];
+
+			const Point pointFrom = transformedPoints[from];
+			const Point pointTo = transformedPoints[to];
 
 			lineDrawer(pointFrom.x, pointFrom.y, pointTo.x, pointTo.y, nullptr);
 		}
