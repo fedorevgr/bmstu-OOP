@@ -1,4 +1,27 @@
-#include "ModelEntry.h"
+#include "QMessageBox"
+
+#include "ModelHandler.h"
+
+static
+void
+showError(const ModelEC modelEc) {
+	switch (modelEc) {
+	case MODEL_FILE_ERROR:
+		QMessageBox::critical(nullptr, "Error", "File error, figure can't be shown");
+		break;
+	case MODEL_UNKNOWN_ERROR:
+		QMessageBox::critical(nullptr, "Error", "Unknown error");
+		break;
+	case  MODEL_MEMORY_ERROR:
+		QMessageBox::critical(nullptr, "Error", "Memory error, figure can't be shown");
+		break;
+	case MODEL_ARG_ERROR:
+		QMessageBox::critical(nullptr, "Error", "Arg error");
+		break;
+	default:
+		break;
+	}
+}
 
 void fillInitArgs(
 		InitArgs &argStruct,
@@ -19,11 +42,8 @@ checkInitArgs(const InitArgs *iArgs)
 	return ec;
 }
 
-ModelEC
+void
 process(const Event event, const void *arg) {
-	if (event == INIT && checkInitArgs((const InitArgs *) arg) != MODEL_OK)
-		return MODEL_ARG_ERROR;
-
 	static Model model;
 	static LineDrawingFunc drawingFunc;
 	static CleaningFunc cleaningFunc;
@@ -60,6 +80,4 @@ process(const Event event, const void *arg) {
 		cleaningFunc(nullptr);
 		modelDraw(model, drawingFunc);
 	}
-
-	return modelEc;
 }

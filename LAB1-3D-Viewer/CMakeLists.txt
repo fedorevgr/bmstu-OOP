@@ -14,17 +14,17 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        View/mainwindow.cpp
+        View/mainwindow.h
+        View/mainwindow.ui
         Geometry/Model.cpp
         Geometry/Model.h
         Geometry/Point.h
         Geometry/Point.cpp
         Geometry/LinearSpace.cpp
         Geometry/LinearSpace.h
-        Geometry/ModelEntry.cpp
-        Geometry/ModelEntry.h
+        View/ModelHandler.cpp
+        View/ModelHandler.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -67,6 +67,7 @@ set_target_properties(LAB1-3D-Viewer PROPERTIES
 )
 
 include(GNUInstallDirs)
+include_directories(Geometry)
 install(TARGETS LAB1-3D-Viewer
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

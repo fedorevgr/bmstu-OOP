@@ -1,5 +1,5 @@
-#ifndef LAB1_3D_VIEWER_MODELENTRY_H
-#define LAB1_3D_VIEWER_MODELENTRY_H
+#ifndef LAB1_3D_VIEWER_MODELHANDLER_H
+#define LAB1_3D_VIEWER_MODELHANDLER_H
 
 #include "Model.h"
 
@@ -24,8 +24,7 @@ typedef struct InitArgs_
 
 void fillInitArgs(InitArgs &argStruct, const char *, LineDrawingFunc, CleaningFunc);
 
-ModelEC process(Event, const void *);
+void process(Event, const void *);
 
 
-
-#endif //LAB1_3D_VIEWER_MODELENTRY_H
+#endif //LAB1_3D_VIEWER_MODELHANDLER_H
