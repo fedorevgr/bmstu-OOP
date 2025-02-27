@@ -1,7 +1,3 @@
-//
-// Created by lpacw on 2/19/2025.
-//
-
 #ifndef LINEARSPACE_H
 #define LINEARSPACE_H
 #include <cmath>

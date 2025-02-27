@@ -34,7 +34,7 @@ typedef enum ModelEC_ {
     MODEL_UNKNOWN_ERROR
 } ModelEC;
 
-ModelEC initModel(const char* filename, Model &model);
+ModelEC initModel(Model &model, const char* filename);
 void modelFree(Model &model);
 
 void modelSetPos(Model &model, const BASE3d &newPos);

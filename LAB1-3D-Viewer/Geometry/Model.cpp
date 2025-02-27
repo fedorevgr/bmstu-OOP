@@ -23,7 +23,7 @@ structureIsEmpty(const Structure& model)
 
 inline static
 ModelEC
-edgeFill_(FILE *file, Edge& edge)
+edgeFill_(Edge& edge, FILE *file)
 {
 	if (!file)
 		return MODEL_ARG_ERROR;
@@ -75,12 +75,12 @@ fillStructureFields_(const Structure& modelStruct, FILE *file)
 
 	for (PointIdx i = 0; i < modelStruct.pointCount && ec == MODEL_OK; i++)
 	{
-		if (pointFill(file, modelStruct.points[i]) != POINT_OK)
+		if (pointFill(modelStruct.points[i], file) != POINT_OK)
 			ec = MODEL_FILE_ERROR;
 	}
 
 	for (int i = 0; i < modelStruct.edgeCount && ec == MODEL_OK; i++)
-		ec = edgeFill_(file, modelStruct.edges[i]);
+		ec = edgeFill_(modelStruct.edges[i], file);
 
 	return ec;
 }
@@ -98,7 +98,7 @@ relatePoints_(Point *points, const PointIdx pointCount, const Point& geometricCe
 
 static
 ModelEC
-initModelFilePtr_(FILE *file, Model& model)
+initModelFilePtr_(Model& model, FILE *file)
 {
 	if (!file)
 		return MODEL_FILE_ERROR;
@@ -117,7 +117,7 @@ initModelFilePtr_(FILE *file, Model& model)
 	if (ec == MODEL_OK)
 	{
 		Point geometricCenter;
-		pointsAverage(model.structure.points, model.structure.pointCount, geometricCenter);
+		pointsAverage(geometricCenter, model.structure.points, model.structure.pointCount);
 		relatePoints_(model.structure.points, model.structure.pointCount, geometricCenter);
 
 		set3Scalars(model.position, 0, 0, 0);
@@ -129,11 +129,11 @@ initModelFilePtr_(FILE *file, Model& model)
 }
 
 ModelEC
-initModel(const char *filename, Model& model)
+initModel(Model& model, const char *filename)
 {
 	FILE *file = fopen(filename, "r");
 
-	ModelEC ec = initModelFilePtr_(file, model);
+	ModelEC ec = initModelFilePtr_(model, file);
 
 	if (ec != MODEL_OK)
 		modelFree(model);
@@ -177,9 +177,9 @@ modelSetScale(Model& model, const BASE3d& newScale)
 
 
 ModelEC
-modelDraw(const Model& model, LineDrawingFunc lineFunc)
+modelDraw(const Model& model, const LineDrawingFunc lineDrawer)
 {
-	if (!model.structure.points || !model.structure.edges || lineFunc == nullptr)
+	if (!model.structure.points || !model.structure.edges || lineDrawer == nullptr)
 		return MODEL_ARG_ERROR;
 
 	ModelEC ec = MODEL_OK;
@@ -200,33 +200,15 @@ modelDraw(const Model& model, LineDrawingFunc lineFunc)
 		}
 
 		for (int i = 0; i < model.structure.edgeCount; i++)
-			lineFunc(
-					transformedPoints[model.structure.edges[i].from].x,
-					transformedPoints[model.structure.edges[i].from].y,
-					transformedPoints[model.structure.edges[i].to].x,
-					transformedPoints[model.structure.edges[i].to].y,
-					nullptr
-			);
+		{
+			const Point pointFrom = transformedPoints[model.structure.edges[i].from];
+			const Point pointTo = transformedPoints[model.structure.edges[i].to];
+
+			lineDrawer(pointFrom.x, pointFrom.y, pointTo.x, pointTo.y, nullptr);
+		}
 	}
 
 	free(transformedPoints);
 	return ec;
 }
 
-void
-modelPrint(const Model &model)
-{
-	printf("Model\n");
-	printf("\tPos\n\t\t%lf, %lf, %lf\n", model.position.x, model.position.y, model.position.z);
-	printf("\tRot\n\t\t%lf, %lf, %lf\n", model.rotation.x, model.rotation.y, model.rotation.z);
-	printf("\tScale\n\t\t%lf, %lf, %lf\n", model.scale.x, model.scale.y, model.scale.z);
-	printf("\tStructure\n");
-
-	if (!model.structure.points || !model.structure.edges)
-		printf("\t\tUninitialized structure\n");
-	else
-	{
-		for (PointIdx i = 0; i < model.structure.pointCount; i++)
-			printf("\t\t%lf, %lf, %lf\n", model.structure.points[i].x, model.structure.points[i].y, model.structure.points[i].z);
-	}
-}

@@ -3,7 +3,7 @@
 
 
 PointEc
-pointFill(FILE *file, Point &point)
+pointFill(Point &point, FILE *file)
 {
 	if (!file)
 		return POINT_ARGUMENTS;
@@ -27,9 +27,9 @@ pointCopy(
 
 PointEc
 pointsAverage(
-		const Point *points,
-		const int n,
-		Point &result
+	Point &result,
+	const Point *points,
+	const int n
 )
 {
 	if (!points || n <= 0)

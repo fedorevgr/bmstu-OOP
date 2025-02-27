@@ -13,9 +13,9 @@ typedef enum {
     POINT_ARGUMENTS
 } PointEc;
 
-PointEc pointFill(FILE *, Point &);
+PointEc pointFill(Point &, FILE *);
 
-PointEc pointsAverage(const Point *points, int n, Point &result);
+PointEc pointsAverage(Point &result, const Point *points, int n);
 
 void pointApplyScale(Point &point, const BASE3d &transform);
 void pointApplyRotation(Point &point, const BASE3d &transform);

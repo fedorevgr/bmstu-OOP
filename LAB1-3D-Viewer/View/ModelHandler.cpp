@@ -34,7 +34,7 @@ modelHandle(const Event event, const void *arg, const ErrorHandlerFunc showError
 	switch (event)
 	{
 	case INIT:
-		modelEc = initModel(((const InitArgs *)arg)->filename, model);
+		modelEc = initModel(model, ((const InitArgs *)arg)->filename);
 		cleaningFunc = ((const InitArgs *)arg)->cleaningFunc;
 		drawingFunc = ((const InitArgs *)arg)->lineFunc;
 		break;
