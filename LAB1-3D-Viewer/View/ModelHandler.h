@@ -14,6 +14,7 @@ typedef enum Event_ {
 static const void *NO_ARG = nullptr;
 
 typedef void (*CleaningFunc)(void *);
+typedef void (*ErrorHandlerFunc)(ModelEC);
 
 typedef struct InitArgs_
 {
@@ -24,7 +25,7 @@ typedef struct InitArgs_
 
 void fillInitArgs(InitArgs &argStruct, const char *, LineDrawingFunc, CleaningFunc);
 
-void modelHandle(const Event event, const void *arg);
+void modelHandle(Event event, const void *arg, ErrorHandlerFunc);
 
 
 #endif //LAB1_3D_VIEWER_MODELHANDLER_H
