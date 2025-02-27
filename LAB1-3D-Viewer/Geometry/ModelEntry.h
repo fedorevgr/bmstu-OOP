@@ -14,17 +14,15 @@ typedef enum Event_ {
 static const void *NO_ARG = nullptr;
 
 typedef void (*CleaningFunc)(void *);
-typedef void (*ErrorHandlingFunc)(ModelEC, void *);
 
 typedef struct InitArgs_
 {
 	const char *filename;
 	LineDrawingFunc lineFunc;
 	CleaningFunc cleaningFunc;
-	ErrorHandlingFunc errorHandler;
 } InitArgs;
 
-void fillInitArgs(InitArgs &argStruct, const char *, LineDrawingFunc, CleaningFunc, ErrorHandlingFunc);
+void fillInitArgs(InitArgs &argStruct, const char *, LineDrawingFunc, CleaningFunc);
 
 ModelEC process(Event, const void *);
 

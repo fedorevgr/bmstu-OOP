@@ -7,7 +7,7 @@
 
 static
 void
-showError(const ModelEC modelEc, void *args) {
+showError(const ModelEC modelEc) {
     switch (modelEc) {
         case MODEL_FILE_ERROR:
             QMessageBox::critical(nullptr, "Error", "File error, figure can't be shown");
@@ -47,6 +47,16 @@ void cleaningFunction(void *args)
 }
 
 
+static
+void
+windowEventHandler(const Event event, const void *arg)
+{
+	ModelEC ec = process(event, arg);
+
+	showError(ec);
+}
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -59,35 +69,35 @@ MainWindow::MainWindow(QWidget *parent)
 	filename = byteArray.constData();
 
    	InitArgs initArgs;
-	fillInitArgs(initArgs, filename, lineDrawer, cleaningFunction, showError);
+	fillInitArgs(initArgs, filename, lineDrawer, cleaningFunction);
 
 	lineDrawer(0, 0, 0, 0, this->ui->graphicsView->scene());
 	cleaningFunction(this->ui->graphicsView->scene());
 
-    process(INIT, &initArgs);
+	windowEventHandler(INIT, &initArgs);
 }
 
 MainWindow::~MainWindow() {
-    process(EXIT, NO_ARG);
+	windowEventHandler(EXIT, NO_ARG);
     delete ui;
 }
 
 void MainWindow::on_posX_valueChanged(double arg1) {
     BASE3d newPos;
 	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value() * -1, this->ui->posZ->value());
-    process(REPOS, &newPos);
+	windowEventHandler(REPOS, &newPos);
 }
 
 void MainWindow::on_posY_valueChanged(double arg1) {
     BASE3d newPos;
 	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value()  * -1, this->ui->posZ->value());
-    process(REPOS, &newPos);
+	windowEventHandler(REPOS, &newPos);
 }
 
 void MainWindow::on_posZ_valueChanged(double arg1) {
     BASE3d newPos;
 	set3Scalars(newPos, this->ui->posX->value(), this->ui->posY->value()  * -1, this->ui->posZ->value());
-    process(REPOS, &newPos);
+	windowEventHandler(REPOS, &newPos);
 }
 
 void MainWindow::on_rotX_valueChanged(double arg1) {
@@ -97,7 +107,7 @@ void MainWindow::on_rotX_valueChanged(double arg1) {
 			degreeToRadians(this->ui->rotY->value()),
 			degreeToRadians(this->ui->rotZ->value())
 			);
-    process(ROTATE, &newPos);
+	windowEventHandler(ROTATE, &newPos);
 }
 
 void MainWindow::on_rotY_valueChanged(double arg1) {
@@ -107,7 +117,7 @@ void MainWindow::on_rotY_valueChanged(double arg1) {
 			degreeToRadians(this->ui->rotY->value()),
 			degreeToRadians(this->ui->rotZ->value())
 	);
-    process(ROTATE, &newPos);
+	windowEventHandler(ROTATE, &newPos);
 }
 
 void MainWindow::on_rotZ_valueChanged(double arg1) {
@@ -117,23 +127,23 @@ void MainWindow::on_rotZ_valueChanged(double arg1) {
 			degreeToRadians(this->ui->rotY->value()),
 			degreeToRadians(this->ui->rotZ->value())
 	);
-    process(ROTATE, &newPos);
+	windowEventHandler(ROTATE, &newPos);
 }
 
 void MainWindow::on_scaleX_valueChanged(double arg1) {
     BASE3d newPos;
 	set3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
-    process(SCALE, &newPos);
+	windowEventHandler(SCALE, &newPos);
 }
 
 void MainWindow::on_scaleY_valueChanged(double arg1) {
     BASE3d newPos;
 	set3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
-    process(SCALE, &newPos);
+	windowEventHandler(SCALE, &newPos);
 }
 
 void MainWindow::on_scaleZ_valueChanged(double arg1) {
     BASE3d newPos;
 	set3Scalars(newPos, this->ui->scaleX->value(), this->ui->scaleY->value(), this->ui->scaleZ->value());
-    process(SCALE, &newPos);
+	windowEventHandler(SCALE, &newPos);
 }

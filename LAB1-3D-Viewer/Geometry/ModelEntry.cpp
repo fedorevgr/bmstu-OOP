@@ -2,20 +2,31 @@
 
 void fillInitArgs(
 		InitArgs &argStruct,
-		const char *fName, LineDrawingFunc func, CleaningFunc clean, ErrorHandlingFunc errHandler)
+		const char *fName, LineDrawingFunc func, CleaningFunc clean)
 {
 	argStruct.lineFunc = func;
 	argStruct.filename = fName;
 	argStruct.cleaningFunc = clean;
-	argStruct.errorHandler = errHandler;
+}
+
+static inline
+ModelEC
+checkInitArgs(const InitArgs *iArgs)
+{
+	ModelEC ec = MODEL_OK;
+	if (iArgs->cleaningFunc == nullptr || iArgs->lineFunc == nullptr)
+		ec = MODEL_ARG_ERROR;
+	return ec;
 }
 
 ModelEC
 process(const Event event, const void *arg) {
+	if (event == INIT && checkInitArgs((const InitArgs *) arg) != MODEL_OK)
+		return MODEL_ARG_ERROR;
+
 	static Model model;
 	static LineDrawingFunc drawingFunc;
 	static CleaningFunc cleaningFunc;
-	static ErrorHandlingFunc errHandler;
 
 	BASE3d *newPos, *newRotation, *newScale;
 
@@ -26,7 +37,6 @@ process(const Event event, const void *arg) {
 		modelEc = initModel(((const InitArgs *) arg)->filename, model);
 		drawingFunc = ((const InitArgs *) arg)->lineFunc;
 		cleaningFunc = ((const InitArgs *) arg)->cleaningFunc;
-		errHandler = ((const InitArgs *) arg)->errorHandler;
 		break;
 	case REPOS:
 		newPos = (BASE3d *) arg;
@@ -50,8 +60,6 @@ process(const Event event, const void *arg) {
 		cleaningFunc(nullptr);
 		modelDraw(model, drawingFunc);
 	}
-
-	errHandler(modelEc, nullptr);
 
 	return modelEc;
 }
