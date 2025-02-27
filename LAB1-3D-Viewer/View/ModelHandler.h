@@ -24,7 +24,7 @@ typedef struct InitArgs_
 
 void fillInitArgs(InitArgs &argStruct, const char *, LineDrawingFunc, CleaningFunc);
 
-void process(Event, const void *);
+void modelHandle(const Event event, const void *arg);
 
 
 #endif //LAB1_3D_VIEWER_MODELHANDLER_H

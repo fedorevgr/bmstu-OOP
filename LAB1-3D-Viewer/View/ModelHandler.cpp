@@ -49,7 +49,7 @@ screenUpdate(const Model& model, const CleaningFunc cleaningFunc, const LineDraw
 
 
 void
-process(const Event event, const void *arg)
+modelHandle(const Event event, const void *arg)
 {
 	static Model model;
 	static LineDrawingFunc drawingFunc;
