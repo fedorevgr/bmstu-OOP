@@ -5,7 +5,6 @@
 
 #include "ModelHandler.h"
 
-
 static
 void lineDrawer(SCALAR x1, SCALAR y1, SCALAR x2, SCALAR y2, void *args)
 {

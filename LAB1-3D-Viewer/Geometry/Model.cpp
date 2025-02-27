@@ -179,7 +179,7 @@ modelSetScale(Model& model, const BASE3d& newScale)
 ModelEC
 modelDraw(const Model& model, LineDrawingFunc lineFunc)
 {
-	if (!model.structure.points || !model.structure.edges || !lineFunc)
+	if (!model.structure.points || !model.structure.edges || lineFunc == nullptr)
 		return MODEL_ARG_ERROR;
 
 	ModelEC ec = MODEL_OK;

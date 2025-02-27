@@ -4,19 +4,21 @@
 
 static
 void
-showError(const ModelEC modelEc) {
-	switch (modelEc) {
+showError(const ModelEC modelEc)
+{
+	switch (modelEc)
+	{
 	case MODEL_FILE_ERROR:
 		QMessageBox::critical(nullptr, "Error", "File error, figure can't be shown");
 		break;
 	case MODEL_UNKNOWN_ERROR:
 		QMessageBox::critical(nullptr, "Error", "Unknown error");
 		break;
-	case  MODEL_MEMORY_ERROR:
+	case MODEL_MEMORY_ERROR:
 		QMessageBox::critical(nullptr, "Error", "Memory error, figure can't be shown");
 		break;
 	case MODEL_ARG_ERROR:
-		QMessageBox::critical(nullptr, "Error", "Arg error");
+		QMessageBox::critical(nullptr, "Error", "Arg error, figure can't be shown");
 		break;
 	default:
 		break;
@@ -24,7 +26,7 @@ showError(const ModelEC modelEc) {
 }
 
 void fillInitArgs(
-		InitArgs &argStruct,
+		InitArgs& argStruct,
 		const char *fName, LineDrawingFunc func, CleaningFunc clean)
 {
 	argStruct.lineFunc = func;
@@ -34,50 +36,46 @@ void fillInitArgs(
 
 static inline
 ModelEC
-checkInitArgs(const InitArgs *iArgs)
+screenUpdate(const Model& model, const CleaningFunc cleaningFunc, const LineDrawingFunc drawingFunc)
 {
-	ModelEC ec = MODEL_OK;
-	if (iArgs->cleaningFunc == nullptr || iArgs->lineFunc == nullptr)
-		ec = MODEL_ARG_ERROR;
+	if (cleaningFunc == nullptr)
+		return MODEL_ARG_ERROR;
+
+	cleaningFunc(nullptr);
+
+	ModelEC ec = modelDraw(model, drawingFunc);
 	return ec;
 }
 
+
 void
-process(const Event event, const void *arg) {
+process(const Event event, const void *arg)
+{
 	static Model model;
 	static LineDrawingFunc drawingFunc;
 	static CleaningFunc cleaningFunc;
 
-	BASE3d *newPos, *newRotation, *newScale;
-
 	ModelEC modelEc = MODEL_OK;
 
-	switch (event) {
+	switch (event)
+	{
 	case INIT:
-		modelEc = initModel(((const InitArgs *) arg)->filename, model);
-		drawingFunc = ((const InitArgs *) arg)->lineFunc;
-		cleaningFunc = ((const InitArgs *) arg)->cleaningFunc;
+		modelEc = initModel(((const InitArgs *)arg)->filename, model);
+		cleaningFunc = ((const InitArgs *)arg)->cleaningFunc;
+		drawingFunc = ((const InitArgs *)arg)->lineFunc;
 		break;
-	case REPOS:
-		newPos = (BASE3d *) arg;
-		modelSetPos(model, *newPos);
+	case REPOS:modelSetPos(model, *(BASE3d *)arg);
 		break;
-	case ROTATE:
-		newRotation = (BASE3d *) arg;
-		modelSetRot(model, *newRotation);
+	case ROTATE:modelSetRot(model, *(BASE3d *)arg);
 		break;
-	case SCALE:
-		newScale = (BASE3d *) arg;
-		modelSetScale(model, *newScale);
+	case SCALE:modelSetScale(model, *(BASE3d *)arg);
 		break;
-	case EXIT:
-		modelFree(model);
+	case EXIT:modelFree(model);
 		break;
 	}
 
 	if (event != EXIT && modelEc == MODEL_OK)
-	{
-		cleaningFunc(nullptr);
-		modelDraw(model, drawingFunc);
-	}
+		modelEc = screenUpdate(model, cleaningFunc, drawingFunc);
+
+	showError(modelEc);
 }
