@@ -5,9 +5,7 @@
 
 #include "ModelHandler.h"
 
-// todo repeat
-// todo static
-// todo poitt draw
+
 static
 void
 showError(const ModelEC modelEc)
