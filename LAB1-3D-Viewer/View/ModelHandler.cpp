@@ -1,14 +1,5 @@
 #include "ModelHandler.h"
 
-void fillInitArgs(
-		InitArgs& argStruct,
-		const char *fName, LineDrawingFunc func, CleaningFunc clean)
-{
-	argStruct.lineFunc = func;
-	argStruct.filename = fName;
-	argStruct.cleaningFunc = clean;
-}
-
 static inline
 ModelEC
 screenUpdate(const Model& model, const CleaningFunc cleaningFunc, const LineDrawingFunc drawingFunc)
@@ -23,28 +14,34 @@ screenUpdate(const Model& model, const CleaningFunc cleaningFunc, const LineDraw
 
 
 void
-modelHandle(const Event event, const void *arg, const ErrorHandlerFunc showError)
+modelHandle(
+		const Event event,
+		const void *arg,
+		const LineDrawingFunc drawingFunc,
+		const CleaningFunc cleaningFunc,
+		const ErrorHandlerFunc showError
+)
 {
 	static Model model;
-	static LineDrawingFunc drawingFunc;
-	static CleaningFunc cleaningFunc;
 
 	ModelEC modelEc = MODEL_OK;
 
 	switch (event)
 	{
 	case INIT:
-		modelEc = initModel(model, ((const InitArgs *)arg)->filename);
-		cleaningFunc = ((const InitArgs *)arg)->cleaningFunc;
-		drawingFunc = ((const InitArgs *)arg)->lineFunc;
+		modelEc = initModel(model, ((const char *)arg));
 		break;
-	case REPOS:modelSetPos(model, *(BASE3d *)arg);
+	case REPOS:
+		modelSetPos(model, *(BASE3d *)arg);
 		break;
-	case ROTATE:modelSetRot(model, *(BASE3d *)arg);
+	case ROTATE:
+		modelSetRot(model, *(BASE3d *)arg);
 		break;
-	case SCALE:modelSetScale(model, *(BASE3d *)arg);
+	case SCALE:
+		modelSetScale(model, *(BASE3d *)arg);
 		break;
-	case EXIT:modelFree(model);
+	case EXIT:
+		modelFree(model);
 		break;
 	}
 

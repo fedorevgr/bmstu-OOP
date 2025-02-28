@@ -208,7 +208,7 @@ modelDraw(const Model& model, const LineDrawingFunc lineDrawer)
 			const Point pointFrom = transformedPoints[from];
 			const Point pointTo = transformedPoints[to];
 
-			lineDrawer(pointFrom.x, pointFrom.y, pointTo.x, pointTo.y, nullptr);
+			lineDrawer(pointFrom, pointTo, nullptr);
 		}
 	}
 

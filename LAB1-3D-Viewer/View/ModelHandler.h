@@ -16,16 +16,12 @@ static const void *NO_ARG = nullptr;
 typedef void (*CleaningFunc)(void *);
 typedef void (*ErrorHandlerFunc)(ModelEC);
 
-typedef struct InitArgs_
-{
-	const char *filename;
-	LineDrawingFunc lineFunc;
-	CleaningFunc cleaningFunc;
-} InitArgs;
-
-void fillInitArgs(InitArgs &argStruct, const char *, LineDrawingFunc, CleaningFunc);
-
-void modelHandle(Event event, const void *arg, ErrorHandlerFunc);
+void modelHandle(
+		Event event,
+		const void *arg,
+		LineDrawingFunc,
+		CleaningFunc,
+		ErrorHandlerFunc);
 
 
 #endif //LAB1_3D_VIEWER_MODELHANDLER_H

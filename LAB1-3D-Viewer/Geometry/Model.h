@@ -3,7 +3,7 @@
 
 #include "Point.h"
 
-typedef void (*LineDrawingFunc)(SCALAR, SCALAR, SCALAR, SCALAR, void *);
+typedef void (*LineDrawingFunc)(BASE3d, BASE3d, void *);
 
 typedef int PointIdx;
 
