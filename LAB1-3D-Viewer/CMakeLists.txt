@@ -25,6 +25,8 @@ set(PROJECT_SOURCES
         Geometry/LinearSpace.h
         View/ModelHandler.cpp
         View/ModelHandler.h
+        View/Impl/GraphicsImpl.cpp
+        View/Impl/GraphicsImpl.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

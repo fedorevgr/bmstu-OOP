@@ -16,7 +16,7 @@ screenUpdate(const Model& model, const CleaningFunc cleaningFunc, const LineDraw
 void
 modelHandle(
 		const Event event,
-		const void *arg,
+		const Request req,
 		const LineDrawingFunc drawingFunc,
 		const CleaningFunc cleaningFunc,
 		const ErrorHandlerFunc showError
@@ -29,16 +29,16 @@ modelHandle(
 	switch (event)
 	{
 	case INIT:
-		modelEc = initModel(model, ((const char *)arg));
+		modelEc = initModel(model, req.filename);
 		break;
 	case REPOS:
-		modelSetPos(model, *(BASE3d *)arg);
+		modelSetPos(model, req.transform);
 		break;
 	case ROTATE:
-		modelSetRot(model, *(BASE3d *)arg);
+		modelSetRot(model, req.transform);
 		break;
 	case SCALE:
-		modelSetScale(model, *(BASE3d *)arg);
+		modelSetScale(model, req.transform);
 		break;
 	case EXIT:
 		modelFree(model);

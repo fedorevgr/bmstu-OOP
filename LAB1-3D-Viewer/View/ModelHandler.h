@@ -11,14 +11,20 @@ typedef enum Event_ {
 	EXIT
 } Event;
 
-static const void *NO_ARG = nullptr;
+typedef union Req_
+{
+	const char *filename;
+	BASE3d transform;
+} Request;
+
+static const Request EMPTY_REQ = { nullptr };
 
 typedef void (*CleaningFunc)(void *);
 typedef void (*ErrorHandlerFunc)(ModelEC);
 
 void modelHandle(
 		Event event,
-		const void *arg,
+		Request,
 		LineDrawingFunc,
 		CleaningFunc,
 		ErrorHandlerFunc);
