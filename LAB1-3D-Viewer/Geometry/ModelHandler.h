@@ -30,11 +30,11 @@ CanvasTools createCanvasTools(LineDrawingFunc, CleaningFunc);
 
 static const Request EMPTY_REQ = { nullptr };
 
-void modelHandle(
+void handle(
 		Event event,
-		Request,
-		CanvasTools,
-		ErrorHandlerFunc
+		Request req,
+		CanvasTools canvasTools,
+		ErrorHandlerFunc showError
 		);
 
 

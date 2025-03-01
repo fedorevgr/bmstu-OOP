@@ -19,7 +19,7 @@ screenUpdate(const Model& model, const CanvasTools canvasTools)
 }
 
 void
-modelHandle(
+handle(
 		const Event event,
 		const Request req,
 		const CanvasTools canvasTools,
@@ -32,21 +32,16 @@ modelHandle(
 
 	switch (event)
 	{
-	case INIT:
-		modelEc = initModel(model, req.filename);
-		break;
-	case REPOS:
-		modelSetPos(model, req.transform);
-		break;
-	case ROTATE:
-		modelSetRot(model, req.transform);
-		break;
-	case SCALE:
-		modelSetScale(model, req.transform);
-		break;
-	case EXIT:
-		modelFree(model);
-		break;
+		case INIT:modelEc = initModel(model, req.filename);
+			break;
+		case REPOS:modelSetPos(model, req.transform);
+			break;
+		case ROTATE:modelSetRot(model, req.transform);
+			break;
+		case SCALE:modelSetScale(model, req.transform);
+			break;
+		case EXIT:modelFree(model);
+			break;
 	}
 
 	if (event != EXIT && modelEc == MODEL_OK)
