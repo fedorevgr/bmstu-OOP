@@ -4,10 +4,8 @@ static inline
 ModelEC
 screenUpdate(const Model& model, const CleaningFunc cleaningFunc, const LineDrawingFunc drawingFunc)
 {
-	if (cleaningFunc == nullptr)
-		return MODEL_ARG_ERROR;
-
-	cleaningFunc(nullptr);
+	if (cleaningFunc)
+		cleaningFunc(nullptr);
 
 	return modelDraw(model, drawingFunc);
 }

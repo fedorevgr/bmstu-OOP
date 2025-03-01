@@ -4,7 +4,7 @@
 #include "QFileDialog"
 
 #include "ModelHandler.h"
-#include "Impl/GraphicsImpl.h"
+#include "GraphicsImpl/GraphicsImpl.h"
 
 static inline BASE3d gatherPosition(Ui_MainWindow &ui);
 static inline BASE3d gatherRotation(Ui_MainWindow &ui);

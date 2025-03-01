@@ -23,10 +23,10 @@ set(PROJECT_SOURCES
         Geometry/Point.cpp
         Geometry/LinearSpace.cpp
         Geometry/LinearSpace.h
-        View/ModelHandler.cpp
-        View/ModelHandler.h
-        View/Impl/GraphicsImpl.cpp
-        View/Impl/GraphicsImpl.h
+        Geometry/ModelHandler.cpp
+        Geometry/ModelHandler.h
+        View/GraphicsImpl/GraphicsImpl.cpp
+        View/GraphicsImpl/GraphicsImpl.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
