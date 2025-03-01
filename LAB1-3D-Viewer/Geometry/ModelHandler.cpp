@@ -1,22 +1,28 @@
 #include "ModelHandler.h"
 
-static inline
-ModelEC
-screenUpdate(const Model& model, const CleaningFunc cleaningFunc, const LineDrawingFunc drawingFunc)
+CanvasTools createCanvasTools(LineDrawingFunc lineF, CleaningFunc cleanF)
 {
-	if (cleaningFunc)
-		cleaningFunc(nullptr);
-
-	return modelDraw(model, drawingFunc);
+	CanvasTools canvasTools;
+	canvasTools.lineFunc = lineF;
+	canvasTools.cleaningFunc = cleanF;
+	return canvasTools;
 }
 
+static inline
+ModelEC
+screenUpdate(const Model& model, const CanvasTools canvasTools)
+{
+	if (canvasTools.cleaningFunc)
+		canvasTools.cleaningFunc(nullptr);
+
+	return modelDraw(model, canvasTools.lineFunc);
+}
 
 void
 modelHandle(
 		const Event event,
 		const Request req,
-		const LineDrawingFunc drawingFunc,
-		const CleaningFunc cleaningFunc,
+		const CanvasTools canvasTools,
 		const ErrorHandlerFunc showError
 )
 {
@@ -44,7 +50,7 @@ modelHandle(
 	}
 
 	if (event != EXIT && modelEc == MODEL_OK)
-		modelEc = screenUpdate(model, cleaningFunc, drawingFunc);
+		modelEc = screenUpdate(model, canvasTools);
 
 	if (showError)
 		showError(modelEc);

@@ -24,66 +24,66 @@ MainWindow::MainWindow(QWidget *parent)
 	lineDrawer({0}, {0}, this->ui->graphicsView->scene());
 	cleaningFunction(this->ui->graphicsView->scene());
 
-	modelHandle(INIT, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(INIT, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 MainWindow::~MainWindow() {
-	modelHandle(EXIT, EMPTY_REQ, nullptr, nullptr, showError);
+	modelHandle(EXIT, EMPTY_REQ, createCanvasTools(nullptr, nullptr), showError);
     delete ui;
 }
 
 void MainWindow::on_posX_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherPosition(*this->ui);
-	modelHandle(REPOS, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(REPOS, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_posY_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherPosition(*this->ui);
-	modelHandle(REPOS, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(REPOS, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_posZ_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherPosition(*this->ui);
-	modelHandle(REPOS, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(REPOS, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_rotX_valueChanged(double arg1) {
 	Request request;
     request.transform = gatherRotation(*this->ui);
-	modelHandle(ROTATE, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(ROTATE, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_rotY_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherRotation(*this->ui);
-	modelHandle(ROTATE, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(ROTATE, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_rotZ_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherRotation(*this->ui);
-	modelHandle(ROTATE, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(ROTATE, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_scaleX_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherScale(*this->ui);
-	modelHandle(SCALE, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(SCALE, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_scaleY_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherScale(*this->ui);
-	modelHandle(SCALE, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(SCALE, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 void MainWindow::on_scaleZ_valueChanged(double arg1) {
 	Request request;
 	request.transform = gatherScale(*this->ui);
-	modelHandle(SCALE, request, lineDrawer, cleaningFunction, showError);
+	modelHandle(SCALE, request, createCanvasTools(lineDrawer, cleaningFunction), showError);
 }
 
 

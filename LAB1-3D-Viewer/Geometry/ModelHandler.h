@@ -3,6 +3,9 @@
 
 #include "Model.h"
 
+typedef void (*CleaningFunc)(void *);
+typedef void (*ErrorHandlerFunc)(ModelEC);
+
 typedef enum Event_ {
 	INIT,
 	REPOS,
@@ -17,17 +20,22 @@ typedef union Req_
 	BASE3d transform;
 } Request;
 
-static const Request EMPTY_REQ = { nullptr };
+typedef struct CanvasTools_
+{
+	LineDrawingFunc lineFunc;
+	CleaningFunc cleaningFunc;
+} CanvasTools;
 
-typedef void (*CleaningFunc)(void *);
-typedef void (*ErrorHandlerFunc)(ModelEC);
+CanvasTools createCanvasTools(LineDrawingFunc, CleaningFunc);
+
+static const Request EMPTY_REQ = { nullptr };
 
 void modelHandle(
 		Event event,
 		Request,
-		LineDrawingFunc,
-		CleaningFunc,
-		ErrorHandlerFunc);
+		CanvasTools,
+		ErrorHandlerFunc
+		);
 
 
 #endif //LAB1_3D_VIEWER_MODELHANDLER_H
