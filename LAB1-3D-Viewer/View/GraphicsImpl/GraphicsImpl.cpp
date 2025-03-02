@@ -34,7 +34,9 @@ void lineDrawer(Point p1, Point p2, void *args)
 	if (args)
 		scene = (QGraphicsScene *) args;
 	else if (scene)
+	{
 		scene->addLine(p1.x, p1.y, p2.x, p2.y);
+	}
 }
 
 void cleaningFunction(void *args)
