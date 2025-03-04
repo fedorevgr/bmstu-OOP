@@ -1,7 +1,7 @@
 #ifndef LAB1_3D_VIEWER_GRAPHICSIMPL_H
 #define LAB1_3D_VIEWER_GRAPHICSIMPL_H
 
-#include "DrawInterface.h"
+#include "ToolsI.h"
 
 void showError(ModelEC modelEc);
 void lineDrawer(Point p1, Point p2, void *args);

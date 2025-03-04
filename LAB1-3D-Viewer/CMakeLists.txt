@@ -27,8 +27,8 @@ set(PROJECT_SOURCES
         Handle/ModelHandler.h
         View/GraphicsImpl/GraphicsImpl.cpp
         View/GraphicsImpl/GraphicsImpl.h
-        Handle/DrawInterface.h
-        Handle/DrawInterfaceImpl.cpp
+        Handle/ToolsI.h
+        Handle/ToolsImpl.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

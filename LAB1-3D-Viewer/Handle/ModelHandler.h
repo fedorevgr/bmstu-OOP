@@ -2,7 +2,7 @@
 #define LAB1_3D_VIEWER_MODELHANDLER_H
 
 #include "Model.h"
-#include "DrawInterface.h"
+#include "ToolsI.h"
 
 typedef enum Event_ {
 	INIT,
