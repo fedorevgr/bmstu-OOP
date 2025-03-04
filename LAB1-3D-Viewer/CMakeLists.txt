@@ -23,10 +23,12 @@ set(PROJECT_SOURCES
         Geometry/Point.cpp
         Geometry/LinearSpace.cpp
         Geometry/LinearSpace.h
-        Geometry/ModelHandler.cpp
-        Geometry/ModelHandler.h
+        Handle/ModelHandler.cpp
+        Handle/ModelHandler.h
         View/GraphicsImpl/GraphicsImpl.cpp
         View/GraphicsImpl/GraphicsImpl.h
+        Handle/DrawInterface.h
+        Handle/DrawInterfaceImpl.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -69,7 +71,7 @@ set_target_properties(LAB1-3D-Viewer PROPERTIES
 )
 
 include(GNUInstallDirs)
-include_directories(Geometry)
+include_directories(Geometry Handle .)
 install(TARGETS LAB1-3D-Viewer
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -1,23 +1,5 @@
 #include "ModelHandler.h"
 
-CanvasTools createCanvasTools(LineDrawingFunc lineF, CleaningFunc cleanF)
-{
-	CanvasTools canvasTools;
-	canvasTools.lineFunc = lineF;
-	canvasTools.cleaningFunc = cleanF;
-	return canvasTools;
-}
-
-static inline
-ModelEC
-screenUpdate(const Model& model, const CanvasTools canvasTools)
-{
-	if (canvasTools.cleaningFunc)
-		canvasTools.cleaningFunc(nullptr);
-
-	return modelDraw(model, canvasTools.lineFunc);
-}
-
 void
 handle(
 		const Event event,
