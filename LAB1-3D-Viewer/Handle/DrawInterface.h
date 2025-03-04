@@ -4,7 +4,6 @@
 #include "Model.h"
 
 typedef void (*CleaningFunc)(void *);
-typedef void (*ErrorHandlerFunc)(ModelEC);
 
 typedef struct CanvasTools_
 {

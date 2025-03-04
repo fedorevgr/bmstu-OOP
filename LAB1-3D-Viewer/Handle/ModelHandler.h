@@ -18,9 +18,11 @@ typedef struct Req_
 	BASE3d transform;
 } Request;
 
+typedef void (*ErrorHandlerFunc)(ModelEC);
+
 static const Request EMPTY_REQ = { nullptr };
 
-void handle(Event, Request, CanvasTools, ErrorHandlerFunc);
+void handle(Event, const Request &, CanvasTools, ErrorHandlerFunc);
 
 
 #endif //LAB1_3D_VIEWER_MODELHANDLER_H

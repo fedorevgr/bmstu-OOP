@@ -3,7 +3,7 @@
 void
 handle(
 		const Event event,
-		const Request req,
+		const Request &req,
 		const CanvasTools canvasTools,
 		const ErrorHandlerFunc showError
 )

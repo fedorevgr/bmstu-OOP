@@ -9,7 +9,7 @@ screenUpdate(const Model& model, const CanvasTools canvasTools)
 	return modelDraw(model, canvasTools.lineFunc);
 }
 
-CanvasTools createCanvasTools(LineDrawingFunc lineF, CleaningFunc cleanF)
+CanvasTools createCanvasTools(const LineDrawingFunc lineF, const CleaningFunc cleanF)
 {
 	CanvasTools canvasTools;
 	canvasTools.lineFunc = lineF;

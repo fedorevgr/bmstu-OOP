@@ -43,6 +43,5 @@ void modelSetScale(Model &model, const BASE3d &newScale);
 
 ModelEC modelDraw(const Model& model, LineDrawingFunc lineDrawer);
 
-void modelPrint(const Model &model);
 
 #endif //MODEL_H
