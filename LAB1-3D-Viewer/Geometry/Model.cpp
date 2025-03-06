@@ -178,7 +178,7 @@ modelSetScale(Model& model, const BASE3d& newScale)
 
 
 ModelEC
-modelDraw(const Model& model, const LineDrawingFunc lineDrawer)
+modelDraw(const Model& model, const LineDrawingFunc lineDrawer, void *args)
 {
 	if (!model.structure.points || !model.structure.edges || lineDrawer == nullptr)
 		return MODEL_ARG_ERROR;
@@ -208,7 +208,7 @@ modelDraw(const Model& model, const LineDrawingFunc lineDrawer)
 			const Point pointFrom = transformedPoints[from];
 			const Point pointTo = transformedPoints[to];
 
-			lineDrawer(pointFrom, pointTo, nullptr);
+			lineDrawer(pointFrom, pointTo, args);
 		}
 	}
 

@@ -12,9 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->graphicsView->setScene(new QGraphicsScene(this));
 
-    lineDrawer({0}, {0}, this->ui->graphicsView->scene());
-    cleaningFunction(this->ui->graphicsView->scene());
-    ScreenTools screenTools = composeTools(lineDrawer, cleaningFunction);
+    ScreenTools screenTools = composeTools(lineDrawer, this->ui->graphicsView->scene(),
+			cleaningFunction, this->ui->graphicsView->scene());
 
     const QString qFilename = QFileDialog::getOpenFileName(this, "Open Model File", ".", "Text files (*.txt)");
     const QByteArray byteArray = qFilename.toUtf8();
@@ -94,7 +93,8 @@ onTransform(Ui_MainWindow &ui, const Event type) {
         default: break;
     }
 
-    ScreenTools screenTools = composeTools(lineDrawer, cleaningFunction);
+    ScreenTools screenTools = composeTools(lineDrawer, ui.graphicsView->scene(),
+			cleaningFunction, ui.graphicsView->scene());
 
     const Request request = composeRequest(type, nullptr, transform, screenTools, showError);
     handle(request);

@@ -8,10 +8,12 @@ typedef void (*CleaningFunc)(void *);
 typedef struct ScreenTools_
 {
 	LineDrawingFunc lineFunc;
+	void *lineFuncArgs;
 	CleaningFunc cleaningFunc;
+	void *cleaningFuncArgs;
 } ScreenTools;
 
-ScreenTools composeTools(LineDrawingFunc, CleaningFunc);
+ScreenTools composeTools(LineDrawingFunc, void *, CleaningFunc, void *);
 ModelEC screenUpdate(const Model& model, ScreenTools screenTools);
 
 
