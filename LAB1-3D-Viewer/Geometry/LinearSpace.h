@@ -9,6 +9,8 @@ typedef struct
     SCALAR x, y, z;
 } BASE3d;
 
+constexpr BASE3d ZERO_BASE = { 0 };
+
 void set3Scalars(BASE3d& base, SCALAR x, SCALAR y, SCALAR z);
 
 void

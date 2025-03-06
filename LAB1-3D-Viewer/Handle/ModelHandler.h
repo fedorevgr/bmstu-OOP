@@ -16,17 +16,18 @@ typedef void (*ErrorHandlerFunc)(ModelEC);
 
 typedef struct Req_
 {
+	Event event;
 	const char *filename;
 	BASE3d transform;
 	ScreenTools drawTools;
 	ErrorHandlerFunc errorHandler;
 } Request;
 
-Request composeRequest(const char *, BASE3d, ScreenTools, ErrorHandlerFunc);
+Request composeRequest(Event, const char *, const BASE3d &, const ScreenTools &, ErrorHandlerFunc);
 
-static constexpr Request EMPTY_REQ = { nullptr };
+static constexpr Request EMPTY_REQ = { EXIT };
 
-void handle(Event, const Request &, ScreenTools, ErrorHandlerFunc);
+void handle(const Request &);
 
 
 #endif //LAB1_3D_VIEWER_MODELHANDLER_H

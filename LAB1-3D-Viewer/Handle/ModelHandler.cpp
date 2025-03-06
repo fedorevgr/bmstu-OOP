@@ -2,17 +2,14 @@
 
 void
 handle(
-		const Event event,
-		const Request &req,
-		const ScreenTools canvasTools,
-		const ErrorHandlerFunc showError
-)
+		const Request &req
+		)
 {
 	static Model model;
 
 	ModelEC modelEc = MODEL_OK;
 
-	switch (event)
+	switch (req.event)
 	{
 		case INIT:modelEc = initModel(model, req.filename);
 			break;
@@ -26,9 +23,26 @@ handle(
 			break;
 	}
 
-	if (event != EXIT && modelEc == MODEL_OK)
-		modelEc = screenUpdate(model, canvasTools);
+	if (req.event != EXIT && modelEc == MODEL_OK)
+		modelEc = screenUpdate(model, req.drawTools);
 
-	if (showError)
-		showError(modelEc);
+	if (req.errorHandler)
+		req.errorHandler(modelEc);
+}
+
+Request
+composeRequest(
+	const Event event,
+	const char *filename,
+	const BASE3d &transform,
+	const ScreenTools &screenTools,
+	const ErrorHandlerFunc errorHandler
+	) {
+	Request request;
+	request.event = event;
+	request.filename = filename;
+	request.transform = transform;
+	request.drawTools = screenTools;
+	request.errorHandler = errorHandler;
+	return request;
 }
