@@ -5,7 +5,14 @@
 #include "Handle/ModelHandler.h"
 #include "GraphicsImpl/GraphicsImpl.h"
 
-static void onTransform(Ui_MainWindow &ui, Event);
+typedef enum
+{
+	TPOS = REPOS,
+	TROT = ROTATE,
+	TSCL = SCALE
+} TType;
+
+static void onTransform(Ui_MainWindow &ui, TType);
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -23,28 +30,25 @@ MainWindow::MainWindow(QWidget *parent)
     handle(request);
 }
 
-MainWindow::~MainWindow() {
-    handle(EMPTY_REQ);
-    delete ui;
-}
+MainWindow::~MainWindow() { handle(EMPTY_REQ); delete ui; }
 
-void MainWindow::on_posX_valueChanged(double arg1) {    onTransform(*this->ui, REPOS);}
+void MainWindow::on_posX_valueChanged(double arg1) {    onTransform(*this->ui, TPOS);}
 
-void MainWindow::on_posY_valueChanged(double arg1) {    onTransform(*this->ui, REPOS);}
+void MainWindow::on_posY_valueChanged(double arg1) {    onTransform(*this->ui, TPOS);}
 
-void MainWindow::on_posZ_valueChanged(double arg1) {    onTransform(*this->ui, REPOS);}
+void MainWindow::on_posZ_valueChanged(double arg1) {    onTransform(*this->ui, TPOS);}
 
-void MainWindow::on_rotX_valueChanged(double arg1) {    onTransform(*this->ui, ROTATE);}
+void MainWindow::on_rotX_valueChanged(double arg1) {    onTransform(*this->ui, TROT);}
 
-void MainWindow::on_rotY_valueChanged(double arg1) {    onTransform(*this->ui, ROTATE);}
+void MainWindow::on_rotY_valueChanged(double arg1) {    onTransform(*this->ui, TROT);}
 
-void MainWindow::on_rotZ_valueChanged(double arg1) { onTransform(*this->ui, ROTATE); }
+void MainWindow::on_rotZ_valueChanged(double arg1) { onTransform(*this->ui, TROT); }
 
-void MainWindow::on_scaleX_valueChanged(double arg1) { onTransform(*this->ui, SCALE); }
+void MainWindow::on_scaleX_valueChanged(double arg1) { onTransform(*this->ui, TSCL); }
 
-void MainWindow::on_scaleY_valueChanged(double arg1) { onTransform(*this->ui, SCALE); }
+void MainWindow::on_scaleY_valueChanged(double arg1) { onTransform(*this->ui, TSCL); }
 
-void MainWindow::on_scaleZ_valueChanged(double arg1) { onTransform(*this->ui, SCALE); }
+void MainWindow::on_scaleZ_valueChanged(double arg1) { onTransform(*this->ui, TSCL); }
 
 
 static inline
@@ -77,25 +81,21 @@ gatherScale(Ui_MainWindow &ui) {
 
 static
 void
-onTransform(Ui_MainWindow &ui, const Event type) {
-    if (type != REPOS && type != ROTATE && type != SCALE)
-        return;
-
+onTransform(Ui_MainWindow &ui, const TType type) {
     BASE3d transform;
 
     switch (type) {
-        case REPOS: transform = gatherPosition(ui);
+        case TPOS: transform = gatherPosition(ui);
             break;
-        case ROTATE: transform = gatherRotation(ui);
+        case TROT: transform = gatherRotation(ui);
             break;
-        case SCALE: transform = gatherScale(ui);
+        case TSCL: transform = gatherScale(ui);
             break;
-        default: break;
     }
 
     ScreenTools screenTools = composeTools(lineDrawer, ui.graphicsView->scene(),
 			cleaningFunction, ui.graphicsView->scene());
 
-    const Request request = composeRequest(type, nullptr, transform, screenTools, showError);
+    const Request request = composeRequest((Event)type, EMPTY_FILE_NAME, transform, screenTools, showError);
     handle(request);
 }
