@@ -1,17 +1,17 @@
 #include "ToolsI.h"
 
 ModelEC
-screenUpdate(const Model& model, const CanvasTools canvasTools)
+screenUpdate(const Model& model, const ScreenTools screenTools)
 {
-	if (canvasTools.cleaningFunc)
-		canvasTools.cleaningFunc(nullptr);
+	if (screenTools.cleaningFunc)
+		screenTools.cleaningFunc(nullptr);
 
-	return modelDraw(model, canvasTools.lineFunc);
+	return modelDraw(model, screenTools.lineFunc);
 }
 
-CanvasTools createCanvasTools(const LineDrawingFunc lineF, const CleaningFunc cleanF)
+ScreenTools composeTools(const LineDrawingFunc lineF, const CleaningFunc cleanF)
 {
-	CanvasTools canvasTools;
+	ScreenTools canvasTools;
 	canvasTools.lineFunc = lineF;
 	canvasTools.cleaningFunc = cleanF;
 	return canvasTools;

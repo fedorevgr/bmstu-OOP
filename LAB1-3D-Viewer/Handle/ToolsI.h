@@ -5,14 +5,14 @@
 
 typedef void (*CleaningFunc)(void *);
 
-typedef struct CanvasTools_
+typedef struct ScreenTools_
 {
 	LineDrawingFunc lineFunc;
 	CleaningFunc cleaningFunc;
-} CanvasTools;
+} ScreenTools;
 
-CanvasTools createCanvasTools(LineDrawingFunc, CleaningFunc);
-ModelEC screenUpdate(const Model& model, CanvasTools canvasTools);
+ScreenTools composeTools(LineDrawingFunc, CleaningFunc);
+ModelEC screenUpdate(const Model& model, ScreenTools screenTools);
 
 
 #endif //LAB1_3D_VIEWER_DRAWINTERFACE_H

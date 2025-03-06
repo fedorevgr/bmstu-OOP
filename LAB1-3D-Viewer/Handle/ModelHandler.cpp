@@ -4,7 +4,7 @@ void
 handle(
 		const Event event,
 		const Request &req,
-		const CanvasTools canvasTools,
+		const ScreenTools canvasTools,
 		const ErrorHandlerFunc showError
 )
 {

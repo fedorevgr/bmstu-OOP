@@ -12,17 +12,21 @@ typedef enum Event_ {
 	EXIT
 } Event;
 
+typedef void (*ErrorHandlerFunc)(ModelEC);
+
 typedef struct Req_
 {
 	const char *filename;
 	BASE3d transform;
+	ScreenTools drawTools;
+	ErrorHandlerFunc errorHandler;
 } Request;
 
-typedef void (*ErrorHandlerFunc)(ModelEC);
+Request composeRequest(const char *, BASE3d, ScreenTools, ErrorHandlerFunc);
 
-static const Request EMPTY_REQ = { nullptr };
+static constexpr Request EMPTY_REQ = { nullptr };
 
-void handle(Event, const Request &, CanvasTools, ErrorHandlerFunc);
+void handle(Event, const Request &, ScreenTools, ErrorHandlerFunc);
 
 
 #endif //LAB1_3D_VIEWER_MODELHANDLER_H
